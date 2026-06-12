@@ -9,4 +9,48 @@
     <string name="an_sky_gs">GlobalSearch</string>
     <string name="an_sky_ff">File-System Folders</string>
     <string name="sky_modules">Sky Modules</string>
+
+    <!-- De-branding: user-facing "Lightning"/"LL" strings from core are
+         overridden here at resource merge time. Strings about importing
+         from or crediting the original Lightning Launcher keep its name. -->
+    <string name="menu_customize">Sky settings</string>
+    <string name="customize_ll">Customize Sky Launcher</string>
+    <string name="an_cl">Customize Sky Launcher</string>
+    <string name="an_lm">Sky menu</string>
+    <string name="an_smsb">Toggle status bar &amp; Sky menu</string>
+    <string name="sc_ml">Sky menu</string>
+    <string name="an_re">Restart Sky Launcher</string>
+    <string name="keep_in_memory_t">Keep Sky Launcher running</string>
+    <string name="install_widgets">Add Sky widget</string>
+    <string name="pick_file">Sky File Manager</string>
+    <string name="shortcut_settings">Sky Launcher setting</string>
+    <string name="shortcut_actions">Sky Launcher action</string>
+    <string name="shortcut_screen">Sky desktop bookmark</string>
+    <string name="ld_t">Sky Drawer</string>
+    <string name="lg_pick_s">This will restart Sky Launcher.</string>
+    <string name="app_killer_s">Kill apps with Sky Launcher</string>
+    <string name="em_s">Unleash the power of Sky Launcher by displaying advanced options</string>
+    <string name="h_k">This is your desktop. Long tap to add objects (apps, widgets, folders, more) and access settings.\n\nPages are created as soon as you drag objects over them: to the left and right sides, but also to the top and bottom sides.\n\nTap to learn more on Sky Launcher concepts.</string>
+    <string name="first_use_message">Sky Launcher is a lightweight and extremely customizable home screen replacement for Android, based on Lightning Launcher.\n\nYou are now running in normal mode, meaning that some advanced options are hidden. Switch to expert mode to access all features and options (General settings).\n\nSky Launcher is now preparing the list of apps once and for all.\n\nThank you for reading and using Sky Launcher!</string>
+    <string name="facebook_t">Sky Launcher on GitHub</string>
+    <string name="facebook_s">Project page: source code, releases, report a bug or suggest a feature</string>
+    <string name="tmpl_s">Apply templates, export for APK</string>
+    <string name="tmpl_check_um">This template was designed for a newer version of Lightning Launcher than the one Sky Launcher is based on. It may not apply correctly.</string>
+    <string name="tmpl_warn_llx">• this template was designed with Lightning Launcher eXtreme: all of its features are available in Sky Launcher.</string>
+    <string name="tr_fl_t">Feature unavailable</string>
+    <!-- the settings selector: Desktop / Sky / Android -->
+    <string name="lightning">Sky</string>
+    <string name="tss">Sky Script</string>
+    <string name="tsv">Sky Variable</string>
+    <string name="pr_s">To accomplish this task, Sky Launcher needs your permission:</string>
+    <string name="pr_rcl_rms">Starting at January 9th, 2019, due to Google policy changes, launchers are not allowed anymore to display unread sms and missed phone calls count.\n\nFortunately Sky Launcher offers a workaround to re-enable this feature. Please hit the \"OK\" button to re-enable the feature.</string>
+    <string name="lwp">Sky Live Wallpaper</string>
+    <string-array name="dialog_action_values">
+        <item>App</item>
+        <item>Shortcut</item>
+        <item>Widget</item>
+        <item>Sky Widget</item>
+        <item>Folder</item>
+        <item>Stop point</item>
+    </string-array>
 </resources>

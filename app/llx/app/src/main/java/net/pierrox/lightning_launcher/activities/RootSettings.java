@@ -95,23 +95,17 @@ public class RootSettings extends PreferenceActivity implements OnPreferenceClic
 		setupPreference(KEY_CAT_INFOS, R.string.app_name, 0);
 		setupPreference(KEY_SELECT_LAUNCHER, R.string.select_launcher_title, 0);
 		setupPreference(KEY_COMMUNITY, R.string.facebook_t, R.string.facebook_s);
-        setupPreference(KEY_RATE, R.string.rate_t, R.string.rate_s);
 
+        // the rate row is gone for good; the upgrade row only ever applied to
+        // the trial build and is removed below
         setupPreference(KEY_UPGRADE, R.string.tr_rs_t, R.string.tr_rs_s);
-        if(app.isTrialVersion()) {
-            final long left = app.getTrialLeft();
-            long d = left==0 ? 0 : 1 + left / 86400000L;
-            findPreference(KEY_UPGRADE).setSummary(getString(R.string.tr_l, d));
-        }
 
+        // "browse templates on the store" is gone: there are no templates on
+        // the store anymore. Loading a template from an installed APK stays.
         setupPreference(KEY_CAT_TEMPLATES, R.string.tmpl_t, R.string.tmpl_s);
-        setupPreference(KEY_TEMPLATES_BROWSE, R.string.tmpl_b_t, R.string.tmpl_b_s);
         setupPreference(KEY_TEMPLATES_APPLY, R.string.tmpl_a_t, R.string.tmpl_a_s);
 
         PreferenceCategory pc=(PreferenceCategory)getPreferenceScreen().findPreference(KEY_CAT_INFOS);
-        if(!Version.HAS_RATE_LINK || app.isFreeVersion() || app.isTrialVersion()) {
-            pc.removePreference(findPreference(KEY_RATE));
-        }
         if(!app.isFreeVersion() && !app.isTrialVersion()) {
             pc.removePreference(findPreference(KEY_UPGRADE));
         }
@@ -165,8 +159,6 @@ public class RootSettings extends PreferenceActivity implements OnPreferenceClic
 			PhoneUtils.selectLauncher(this, true);
         } else if(KEY_UPGRADE.equals(key)) {
             LLApp.get().startUnlockProcess(this);
-        } else if(KEY_TEMPLATES_BROWSE.equals(key)) {
-            startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Version.BROWSE_TEMPLATES_URI), ""));
         } else if(KEY_TEMPLATES_APPLY.equals(key)) {
             Intent i=new Intent(Intent.ACTION_PICK_ACTIVITY);
             i.putExtra(Intent.EXTRA_TITLE, getString(R.string.tmpl_c));

@@ -112,6 +112,29 @@ Audit results (2018-era code on modern Android):
   targetSdk is raised. Old lightninglauncher.com wiki/community links kept
   (classic docs), may rot.
 
+## 2026-06-12 — v0.4.0: quality-care / de-branding pass
+
+Settings cleanup:
+- "Browse existing templates" removed (searched Play for lltemplate apps;
+  none exist anymore). "Load a template" from an installed APK, backup,
+  restore and export all stay.
+- "Lightning Launcher on Google+" row replaced by "Sky Launcher on GitHub"
+  linking to the project page.
+- Rate-my-app: completely gone. Row removed from settings XML, the trial-only
+  nag was already dead (IS_TRIAL=false), HAS_RATE_LINK=false as backstop.
+
+De-branding (override strings in app/sky_branding.xml; core untouched):
+- "Unleash the power of LL…" -> "…of Sky Launcher…" (expert mode hint)
+- Settings selector Desktop / Lightning / Android -> Desktop / Sky / Android
+- "Lightning settings", "Customize Lightning", "Lightning menu", "Restart
+  Lightning", "Keep Lightning running", "Lightning File Manager", "LL
+  Widget" add-item entry, Tasker plugin labels (Sky Script / Sky Variable),
+  permission prompt, unread-workaround dialog, first-use message, hints —
+  all reworded to Sky / Sky Launcher.
+- Kept on purpose: the LL-import dialog (it really is about importing from
+  Lightning Launcher), template compatibility wording (reworded but credits
+  LL), THIRD_PARTY/About credits, wiki/community links (classic docs).
+
 ## 2026-06-11 — RESULT: BUILD SUCCESSFUL
 
 Toolchain: Gradle 8.9 / AGP 8.7.3 / JDK 21 / NDK 28.2.13676358 / cmake 3.22.1

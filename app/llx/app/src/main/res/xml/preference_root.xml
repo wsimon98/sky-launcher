@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen 
+<PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android" >
-    
+
     <PreferenceCategory
         android:key="t">
-        
+
 		<Preference
 		    android:key="g"/>
-		
+
         <Preference
            	android:key="d"/>
-		
+
 		<Preference
 		    android:key="a"/>
 
@@ -22,11 +22,8 @@
 
     <PreferenceCategory
         android:key="tc">
-        <Preference 
-		    android:key="br"/>
-        		
         <Preference
-            android:key="tb"/>
+		    android:key="br"/>
 
         <Preference
             android:key="ta"/>
@@ -37,27 +34,20 @@
         android:title="@string/app_name">
 
 
-				
+
         <Preference
             android:key="f">
 			<intent
 				android:action="android.intent.action.VIEW"
-				android:data="https://community.lightninglauncher.com/"/>
-		</Preference>  
-	
-		<Preference
-		    android:key="r">
-			<intent
-				android:action="android.intent.action.VIEW"
-				android:data="http://market.android.com/details?id=net.pierrox.lightning_launcher_extreme"/>
+				android:data="https://github.com/wsimon98/sky-launcher"/>
 		</Preference>
-				
-		<Preference 
+
+		<Preference
 		    android:key="s"/>
 
 		<Preference
 		    android:key="u"/>
-		
+
     </PreferenceCategory>
-    
+
 </PreferenceScreen>
