@@ -57,9 +57,9 @@ import net.pierrox.lightning_launcher_extreme.R;
 public class SkyModulesActivity extends Activity {
 
     private SkyConfig mConfig;
-    private RadioButton mRadioClassic, mRadioModern, mRadioMinimal, mRadioCustom;
     private CheckBox mCheckEdgeWheel, mCheckPalette, mCheckSearch, mCheckFsFolders, mCheckTags, mCheckDrawerButton;
     private boolean mUpdating;
+    private static final int REQUEST_PICK_ICON_PACK = 71;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,36 +74,7 @@ public class SkyModulesActivity extends Activity {
         root.setPadding(pad, pad, pad, pad);
         scroll.addView(root);
 
-        root.addView(header("Mode"));
-
-        RadioGroup modes = new RadioGroup(this);
-        mRadioClassic = radio(modes, "Classic LLX",
-                "Pure Lightning Launcher behavior, all new modules off");
-        mRadioModern = radio(modes, "Modern Sky",
-                "Classic canvas plus EdgeWheel, Command Palette and GlobalSearch");
-        mRadioMinimal = radio(modes, "Minimal",
-                "A clean simple home screen, all new modules off");
-        mRadioCustom = radio(modes, "Custom",
-                "Set automatically when modules are toggled by hand");
-        mRadioCustom.setEnabled(false);
-        root.addView(modes);
-
-        modes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (mUpdating) return;
-                String newMode;
-                if (checkedId == mRadioClassic.getId()) newMode = SkyConfig.MODE_CLASSIC_LLX;
-                else if (checkedId == mRadioModern.getId()) newMode = SkyConfig.MODE_MODERN_SKY;
-                else if (checkedId == mRadioMinimal.getId()) newMode = SkyConfig.MODE_MINIMAL;
-                else return;
-                mConfig.applyMode(newMode);
-                mConfig.applyDefaultBindings(getEngine());
-                refresh();
-            }
-        });
-
-        root.addView(header("Optional modules"));
+        root.addView(header("Modules"));
 
         mCheckEdgeWheel = check(root, "EdgeWheel",
                 "Radial quick launcher (two-finger swipe up when bound)", "edgeWheel");
@@ -144,13 +115,82 @@ public class SkyModulesActivity extends Activity {
             }
         });
 
-        root.addView(note("\nAll modules are off in Classic LLX mode. Gestures can be "
-                + "rebound under launcher settings > Events. Sky Launcher has no "
-                + "internet access: everything stays on this device."));
+        root.addView(header("Look"));
+
+        android.widget.Button iconPack = new android.widget.Button(this);
+        iconPack.setText("Apply icon pack…");
+        iconPack.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                Intent i = new Intent(Intent.ACTION_PICK_ACTIVITY);
+                i.putExtra(Intent.EXTRA_TITLE, "Icon packs");
+                i.putExtra(Intent.EXTRA_INTENT, new Intent("org.adw.launcher.icons.ACTION_PICK_ICON"));
+                try {
+                    startActivityForResult(i, REQUEST_PICK_ICON_PACK);
+                } catch (Exception e) {
+                    Toast.makeText(SkyModulesActivity.this, "No icon pack apps installed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        root.addView(iconPack);
+        root.addView(note("Applies an installed ADW-format icon pack to the app drawer and home desktop."));
+
+        root.addView(note("\nGestures can be rebound under launcher settings > Events. "
+                + "Sky Launcher has no internet access: everything stays on this device."));
 
         setContentView(scroll, new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         refresh();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_PICK_ICON_PACK) {
+            if (resultCode == RESULT_OK && data != null && data.getComponent() != null) {
+                applyIconPack(data.getComponent().getPackageName());
+            }
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void applyIconPack(final String packageName) {
+        final LightningEngine engine = getEngine();
+        if (engine == null) {
+            Toast.makeText(this, "Launcher not ready", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Toast.makeText(this, "Applying icon pack…", Toast.LENGTH_SHORT).show();
+        try {
+            final Page drawer = engine.getOrLoadPage(Page.APP_DRAWER_PAGE);
+            final Page home = engine.getOrLoadPage(engine.getGlobalConfig().homeScreen);
+            drawer.config.iconPack = packageName;
+            net.pierrox.lightning_launcher.data.IconPack.applyIconPackAsync(this, packageName,
+                    drawer, net.pierrox.lightning_launcher.data.Item.NO_ID,
+                    new net.pierrox.lightning_launcher.data.IconPack.IconPackListener() {
+                @Override
+                public void onPackApplied(boolean success) {
+                    if (!success) {
+                        Toast.makeText(SkyModulesActivity.this,
+                                "This app does not look like an icon pack", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    home.config.iconPack = packageName;
+                    net.pierrox.lightning_launcher.data.IconPack.applyIconPackAsync(
+                            SkyModulesActivity.this, packageName, home,
+                            net.pierrox.lightning_launcher.data.Item.NO_ID,
+                            new net.pierrox.lightning_launcher.data.IconPack.IconPackListener() {
+                        @Override
+                        public void onPackApplied(boolean success2) {
+                            engine.saveData();
+                            Toast.makeText(SkyModulesActivity.this, "Icon pack applied", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(this, "Could not apply the icon pack", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private LightningEngine getEngine() {
@@ -202,12 +242,6 @@ public class SkyModulesActivity extends Activity {
 
     private void refresh() {
         mUpdating = true;
-        switch (mConfig.mode) {
-            case SkyConfig.MODE_CLASSIC_LLX: mRadioClassic.setChecked(true); break;
-            case SkyConfig.MODE_MODERN_SKY: mRadioModern.setChecked(true); break;
-            case SkyConfig.MODE_MINIMAL: mRadioMinimal.setChecked(true); break;
-            default: mRadioCustom.setEnabled(true); mRadioCustom.setChecked(true); break;
-        }
         mCheckEdgeWheel.setChecked(mConfig.edgeWheel);
         mCheckPalette.setChecked(mConfig.commandPalette);
         mCheckSearch.setChecked(mConfig.globalSearch);

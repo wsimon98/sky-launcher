@@ -24,29 +24,32 @@ SOFTWARE.
 
 package net.pierrox.lightning_launcher.sky;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-
-import net.pierrox.lightning_launcher.engine.LightningEngine;
+import android.content.Context;
+import android.os.Build;
 
 /**
- * First-run setup and one-time upgrades, hooked from the Dashboard.
- * Sky Launcher is modern by default: on first run all Sky modules are
- * enabled silently — individual modules can still be switched off in the
- * Sky Modules settings, there is no mode quiz.
+ * Sky accent colors. On Android 12+ the Material You dynamic accent is used;
+ * elsewhere (and as fallback) the skyfox red.
  */
-public class SkySetup {
+public final class SkyTheme {
 
-    public static void onDashboardResume(final Activity dashboard, final LightningEngine engine) {
-        final SkyConfig config = SkyConfig.getInstance(dashboard);
+    public static final int FOX_RED = 0xFFD9442B;
 
-        // one-time gesture modernization for layouts from older versions
-        config.ensureModernGestureDefaults(dashboard, engine);
+    private SkyTheme() {}
 
-        if (config.isFirstRun()) {
-            config.applyMode(SkyConfig.MODE_MODERN_SKY);
-            config.applyDefaultBindings(engine);
+    public static int accent(Context context) {
+        if (Build.VERSION.SDK_INT >= 31) {
+            try {
+                return context.getColor(android.R.color.system_accent1_400);
+            } catch (Exception e) {
+                // fall through
+            }
         }
+        return FOX_RED;
+    }
+
+    /** Accent with custom alpha (0-255). */
+    public static int accentWithAlpha(Context context, int alpha) {
+        return (accent(context) & 0x00FFFFFF) | (alpha << 24);
     }
 }

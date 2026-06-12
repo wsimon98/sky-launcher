@@ -119,7 +119,8 @@ public class TagsDialog {
                 TextView t2 = v.findViewById(android.R.id.text2);
                 List<String> appTags = tags.getTags(row.component);
                 t2.setText(appTags.isEmpty() ? "no tags" : "#" + joinTags(appTags));
-                t2.setTextColor(appTags.isEmpty() ? Color.GRAY : 0xFFD9442B);
+                t2.setTextColor(appTags.isEmpty() ? Color.GRAY
+                        : net.pierrox.lightning_launcher.sky.SkyTheme.accent(activity));
                 return v;
             }
         };
@@ -185,6 +186,29 @@ public class TagsDialog {
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
         refresh.run();
+    }
+
+    /** Quick tag editor for a single app (used by the item long-press menu). */
+    public static void showForApp(final Activity activity, final String component, String label) {
+        final SkyTags tags = new SkyTags(activity);
+        final EditText input = new EditText(activity);
+        input.setHint("comma-separated tags, e.g. games, kids");
+        input.setText(joinTags(tags.getTags(component)));
+        new AlertDialog.Builder(activity)
+                .setTitle(label == null ? "Tags" : label)
+                .setView(input)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int which) {
+                        ArrayList<String> newTags = new ArrayList<>();
+                        for (String t : input.getText().toString().split(",")) {
+                            newTags.add(t.trim());
+                        }
+                        tags.setTags(component, newTags);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     private static boolean matchesTag(SkyTags tags, String component, String query) {

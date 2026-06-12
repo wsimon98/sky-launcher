@@ -97,6 +97,7 @@ public class FsFoldersDialog {
 
         mBreadcrumb = new TextView(mCtx.activity);
         mBreadcrumb.setTextSize(16);
+        mBreadcrumb.setTextColor(net.pierrox.lightning_launcher.sky.SkyTheme.accent(mCtx.activity));
         mBreadcrumb.setPadding(0, 0, 0, pad);
         root.addView(mBreadcrumb);
 

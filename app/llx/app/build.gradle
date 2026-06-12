@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId "app.skylauncher"
-        versionCode 6
-        versionName "0.5.0 (LL 14.3 base)"
+        versionCode 7
+        versionName "0.6.0 (LL 14.3 base)"
 
         minSdk 21
         // Staged low on purpose for classic LLX behavior; see MIGRATION_REPORT.md

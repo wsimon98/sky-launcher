@@ -163,6 +163,43 @@ Borrow-source phases now complete: Pie Launcher (EdgeWheel) /
 T-UI (Command Palette) / Kvaesitso idea (GlobalSearch) /
 SimpleFolderLauncher (FS Folders) / Neo idea (Tags) — all as original code.
 
+## 2026-06-12 — v0.6.0: modern-only, scrubber, quick actions, icon packs, Monet
+
+Modern-only (per operator decision):
+- First-run mode picker REMOVED. Fresh installs silently enable all Sky
+  modules (Modern Sky). Individual modules can still be toggled in Sky
+  Modules; the classic/minimal mode quiz is gone from settings too.
+
+App drawer alphabet scrubber (idea credit: Niagara-style ribbons; original
+code): slim A–Z ribbon on the right edge, visible in the by-name drawer
+layout; tap/drag to jump to the first app for the letter (uses the classic
+ensureCellVisible cell scrolling).
+
+Item long-press quick actions: LL already had App info / Play page / Kill /
+Uninstall in the item menu; added "Tags…" (when the Tags module is on) to
+edit an app's tags in place.
+
+Icon packs: classic ADW-format icon pack support already existed in
+Customize; added an "Apply icon pack…" one-tap flow in Sky Modules that
+applies a pack to both the app drawer and the home desktop.
+
+Shelf: the classic floating overlay desktop IS the shelf — new :shelf
+command shows it (and explains how to designate an overlay desktop when
+none is set). SHOW/HIDE_FLOATING_DESKTOP remain bindable to any gesture.
+
+Material You: Sky accents (EdgeWheel hub, tag highlights, FS Folders
+breadcrumb, scrubber active letter) use the system dynamic color on
+Android 12+, falling back to the skyfox red elsewhere.
+
+KWGT audit (desk check): LL's widget host uses standard AppWidgetHost
+binding + the widget resize/configure flows; KWGT should behave like any
+host. Needs an on-device check with a Kustom widget before calling it done.
+
+Scripts-from-GitHub idea: ON HOLD until the Rhino script engine is verified
+on-device (create + run a small script in the Script Editor). If old LLX
+scripts run, a GitHub import path (TrianguloY's MIT script repository) is
+worth building.
+
 ## 2026-06-11 — RESULT: BUILD SUCCESSFUL
 
 Toolchain: Gradle 8.9 / AGP 8.7.3 / JDK 21 / NDK 28.2.13676358 / cmake 3.22.1

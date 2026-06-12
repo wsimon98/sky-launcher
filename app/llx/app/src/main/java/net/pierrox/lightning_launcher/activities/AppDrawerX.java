@@ -787,6 +787,61 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
 
         mLayoutMode = mode;
         mState.layoutMode = mode;
+
+        updateSkyScrubber(mode);
+    }
+
+    private net.pierrox.lightning_launcher.sky.drawer.SkyScrubberView mSkyScrubber;
+
+    /** Alphabet scrubber on the right edge, shown in the by-name layout. */
+    private void updateSkyScrubber(int mode) {
+        if(mSkyScrubber == null) {
+            if(mode != Utils.LAYOUT_MODE_BY_NAME) return;
+            mSkyScrubber = new net.pierrox.lightning_launcher.sky.drawer.SkyScrubberView(this,
+                    new net.pierrox.lightning_launcher.sky.drawer.SkyScrubberView.OnLetterListener() {
+                @Override
+                public void onLetter(char letter) {
+                    skyJumpToLetter(letter);
+                }
+            });
+            android.widget.FrameLayout content = findViewById(android.R.id.content);
+            float density = getResources().getDisplayMetrics().density;
+            android.widget.FrameLayout.LayoutParams lp = new android.widget.FrameLayout.LayoutParams(
+                    (int) (26 * density), android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                    android.view.Gravity.RIGHT);
+            int margin = (int) (64 * density);
+            lp.topMargin = margin;
+            lp.bottomMargin = margin;
+            content.addView(mSkyScrubber, lp);
+        }
+        mSkyScrubber.setVisibility(mode == Utils.LAYOUT_MODE_BY_NAME ? View.VISIBLE : View.GONE);
+    }
+
+    private void skyJumpToLetter(char letter) {
+        try {
+            Page page = mItemLayout.getPage();
+            if(page == null || page.items == null) return;
+            Item exact = null, next = null;
+            for(Item i : page.items) {
+                if(!(i instanceof Shortcut) || i instanceof Folder) continue;
+                String label = ((Shortcut) i).getLabel();
+                if(label == null || label.isEmpty()) continue;
+                char c = Character.toUpperCase(label.charAt(0));
+                boolean isLetter = c >= 'A' && c <= 'Z';
+                if(letter == '#') {
+                    if(!isLetter) { exact = i; break; }
+                } else {
+                    if(c == letter) { exact = i; break; }
+                    if(isLetter && c > letter && next == null) next = i;
+                }
+            }
+            Item target = exact != null ? exact : next;
+            if(target != null) {
+                mItemLayout.ensureCellVisible(target.getCell());
+            }
+        } catch(Exception e) {
+            // never let the scrubber break the drawer
+        }
     }
 
     private boolean hasMode(int mode) {

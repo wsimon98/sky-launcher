@@ -176,7 +176,8 @@ public class EdgeWheelOverlay {
         hub.setTextColor(Color.WHITE);
         hub.setTextSize(14);
         hub.setGravity(Gravity.CENTER);
-        hub.setBackgroundColor(0x60FFFFFF);
+        hub.setBackgroundColor(net.pierrox.lightning_launcher.sky.SkyTheme
+                .accentWithAlpha(mSkyContext.activity, 0xA0));
         hub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

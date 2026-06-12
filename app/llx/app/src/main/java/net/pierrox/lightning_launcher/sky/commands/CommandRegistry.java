@@ -72,6 +72,7 @@ public class CommandRegistry {
             new BuiltIn(":search", "Open GlobalSearch (when enabled)", false),
             new BuiltIn(":tree", "Open File-System Folders (when enabled)", false),
             new BuiltIn(":tags", "Manage app tags (when enabled)", false),
+            new BuiltIn(":shelf", "Show the floating desktop (set a desktop as overlay first)", false),
             new BuiltIn(":sky", "Open Sky modules settings", false),
             new BuiltIn(".app", "Launch an app by name", true),
             new BuiltIn(".script", "Run a script by name", true),
@@ -151,6 +152,13 @@ public class CommandRegistry {
                     return CommandResult.ok();
                 }
                 return CommandResult.error("Enable Tags in Sky Modules first");
+            case ":shelf":
+                // the shelf is classic LLX's floating overlay desktop
+                if (mCtx.engine.getGlobalConfig().overlayScreen == Page.NONE) {
+                    return CommandResult.error("Pick a desktop and enable it as overlay in its settings first");
+                }
+                mCtx.runAction(GlobalConfig.SHOW_FLOATING_DESKTOP, null);
+                return CommandResult.ok();
             case ":sky":
                 mCtx.activity.startActivity(new Intent(mCtx.activity, SkyModulesActivity.class));
                 return CommandResult.ok();

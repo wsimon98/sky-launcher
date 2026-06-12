@@ -1382,6 +1382,18 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 startActivity(new Intent(Intent.ACTION_DELETE, Uri.parse("package:" + targetItemPackageName)));
                 break;
 
+            case R.id.mi_sky_tag:
+                if(targetItem instanceof Shortcut) {
+                    Shortcut tagShortcut = (Shortcut) targetItem;
+                    Intent tagIntent = tagShortcut.getIntent();
+                    ComponentName tagCn = tagIntent == null ? null : tagIntent.getComponent();
+                    if(tagCn != null) {
+                        net.pierrox.lightning_launcher.sky.tags.TagsDialog.showForApp(
+                                this, tagCn.flattenToShortString(), tagShortcut.getLabel());
+                    }
+                }
+                break;
+
             case R.id.mi_cfp:
                 Utils.convertFolderToPanel((Folder) targetItem);
                 break;
@@ -4014,6 +4026,10 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     addBubbleItem(R.id.mi_app_store, R.string.mi_app_store);
                     addBubbleItem(R.id.mi_kill, pkg.equals(getPackageName()) ? R.string.an_re : R.string.mi_kill);
                     addBubbleItem(R.id.mi_uninstall, R.string.mi_uninstall);
+                    if(item_class == Shortcut.class
+                            && net.pierrox.lightning_launcher.sky.SkyConfig.getInstance(Dashboard.this).tags) {
+                        addBubbleItem(R.id.mi_sky_tag, R.string.mi_sky_tag);
+                    }
                 }
             } else if(getClass()!=AppDrawerX.class) {
                 if(false) {

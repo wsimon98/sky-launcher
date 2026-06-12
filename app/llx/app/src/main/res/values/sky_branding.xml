@@ -44,6 +44,7 @@
     <!-- pull-past-edge events (new in Sky Launcher) -->
     <string name="ev_ostop">Pull beyond top</string>
     <string name="ev_osbot">Pull beyond bottom</string>
+    <string name="mi_sky_tag">Tags…</string>
     <string name="tss">Sky Script</string>
     <string name="tsv">Sky Variable</string>
     <string name="pr_s">To accomplish this task, Sky Launcher needs your permission:</string>
