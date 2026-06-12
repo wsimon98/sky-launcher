@@ -58,7 +58,7 @@ public class SkyModulesActivity extends Activity {
 
     private SkyConfig mConfig;
     private RadioButton mRadioClassic, mRadioModern, mRadioMinimal, mRadioCustom;
-    private CheckBox mCheckEdgeWheel, mCheckPalette, mCheckSearch, mCheckFsFolders, mCheckDrawerButton;
+    private CheckBox mCheckEdgeWheel, mCheckPalette, mCheckSearch, mCheckFsFolders, mCheckTags, mCheckDrawerButton;
     private boolean mUpdating;
 
     @Override
@@ -113,6 +113,21 @@ public class SkyModulesActivity extends Activity {
                 "Local search across apps, items and scripts (double tap when bound)", "globalSearch");
         mCheckFsFolders = check(root, "File-System Folders",
                 "Organize apps, commands and links in a file tree (open via the :tree command or a bound gesture). Classic folders are untouched", "fileSystemFolders");
+        mCheckTags = check(root, "Tags",
+                "Tag apps with keywords; search \"#tag\" in GlobalSearch. Metadata only, never moves items", "tags");
+        android.widget.Button manageTags = new android.widget.Button(this);
+        manageTags.setText("Manage tags…");
+        manageTags.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                if (mConfig.tags) {
+                    net.pierrox.lightning_launcher.sky.tags.TagsDialog.show(SkyModulesActivity.this);
+                } else {
+                    Toast.makeText(SkyModulesActivity.this, "Enable Tags first", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        root.addView(manageTags);
 
         root.addView(header("Home screen"));
 
@@ -197,6 +212,7 @@ public class SkyModulesActivity extends Activity {
         mCheckPalette.setChecked(mConfig.commandPalette);
         mCheckSearch.setChecked(mConfig.globalSearch);
         mCheckFsFolders.setChecked(mConfig.fileSystemFolders);
+        mCheckTags.setChecked(mConfig.tags);
         mCheckDrawerButton.setChecked(mConfig.appDrawerButtonItemId != -1);
         mUpdating = false;
     }

@@ -71,6 +71,7 @@ public class CommandRegistry {
             new BuiltIn(":desktop", "Choose a desktop to go to", false),
             new BuiltIn(":search", "Open GlobalSearch (when enabled)", false),
             new BuiltIn(":tree", "Open File-System Folders (when enabled)", false),
+            new BuiltIn(":tags", "Manage app tags (when enabled)", false),
             new BuiltIn(":sky", "Open Sky modules settings", false),
             new BuiltIn(".app", "Launch an app by name", true),
             new BuiltIn(".script", "Run a script by name", true),
@@ -144,6 +145,12 @@ public class CommandRegistry {
             case ":tree":
                 mCtx.runAction(GlobalConfig.SKY_FS_FOLDERS, null);
                 return CommandResult.ok();
+            case ":tags":
+                if (net.pierrox.lightning_launcher.sky.SkyConfig.getInstance(mCtx.activity).tags) {
+                    net.pierrox.lightning_launcher.sky.tags.TagsDialog.show(mCtx.activity);
+                    return CommandResult.ok();
+                }
+                return CommandResult.error("Enable Tags in Sky Modules first");
             case ":sky":
                 mCtx.activity.startActivity(new Intent(mCtx.activity, SkyModulesActivity.class));
                 return CommandResult.ok();

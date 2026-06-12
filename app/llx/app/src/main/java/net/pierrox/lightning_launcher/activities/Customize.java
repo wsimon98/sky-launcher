@@ -1317,6 +1317,8 @@ public class Customize extends ResourceWrapperActivity implements
 
             mPreferencesPageEvents.add(mPageEventBgTap = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_bg_tap, pc.bgTap, EventAction.UNSET(), actions));
             mPreferencesPageEvents.add(mPageEventBgDoubleTap = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_bg_dtap, pc.bgDoubleTap, EventAction.UNSET(), actions));
+            mPreferencesPageEvents.add(mPageEventOverscrollTop = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_ostop, pc.overscrollTop, EventAction.UNSET(), actions));
+            mPreferencesPageEvents.add(mPageEventOverscrollBottom = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_osbot, pc.overscrollBottom, EventAction.UNSET(), actions));
             if(!is_embedded_folder_page) {
                 mPreferencesPageEvents.add(mPageEventSwipeLeft = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_swipe_l, pc.swipeLeft, EventAction.UNSET(), actions));
                 mPreferencesPageEvents.add(mPageEventSwipeRight = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_swipe_r, pc.swipeRight, EventAction.UNSET(), actions));
@@ -1503,6 +1505,8 @@ public class Customize extends ResourceWrapperActivity implements
 		mPreferencesGlobalConfigEvents.add(mGCEventSwipe2Right = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_swipe2_r, mGlobalConfig.swipe2Right, null, desktopActions));
 		mPreferencesGlobalConfigEvents.add(mGCEventSwipe2Up = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_swipe2_u, mGlobalConfig.swipe2Up, null, desktopActions));
 		mPreferencesGlobalConfigEvents.add(mGCEventSwipe2Down = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_swipe2_d, mGlobalConfig.swipe2Down, null, desktopActions));
+		mPreferencesGlobalConfigEvents.add(mGCEventOverscrollTop = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_ostop, mGlobalConfig.overscrollTop, null, desktopActions));
+		mPreferencesGlobalConfigEvents.add(mGCEventOverscrollBottom = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_osbot, mGlobalConfig.overscrollBottom, null, desktopActions));
         mPreferencesGlobalConfigEvents.add(mGCEventScreenOn = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_screen_on, mGlobalConfig.screenOn, null, desktopActions));
         mPreferencesGlobalConfigEvents.add(mGCEventScreenOff = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_screen_off, mGlobalConfig.screenOff, null, desktopActions));
         mPreferencesGlobalConfigEvents.add(mGCEventOrientationPortrait = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_op, mGlobalConfig.orientationPortrait, null, desktopActions));
@@ -1607,6 +1611,8 @@ public class Customize extends ResourceWrapperActivity implements
 		mGlobalConfig.swipe2Right = mGCEventSwipe2Right.getValue();
 		mGlobalConfig.swipe2Up = mGCEventSwipe2Up.getValue();
 		mGlobalConfig.swipe2Down = mGCEventSwipe2Down.getValue();
+		mGlobalConfig.overscrollTop = mGCEventOverscrollTop.getValue();
+		mGlobalConfig.overscrollBottom = mGCEventOverscrollBottom.getValue();
 		mGlobalConfig.screenOn = mGCEventScreenOn.getValue();
 		mGlobalConfig.screenOff = mGCEventScreenOff.getValue();
 		mGlobalConfig.orientationPortrait = mGCEventOrientationPortrait.getValue();
@@ -1732,6 +1738,8 @@ public class Customize extends ResourceWrapperActivity implements
         if(mPageEventSearchKey != null) pc.searchKey = mPageEventSearchKey.getValue();
     	if(mPageEventBgTap != null) pc.bgTap = mPageEventBgTap.getValue();
     	if(mPageEventBgDoubleTap != null) pc.bgDoubleTap = mPageEventBgDoubleTap.getValue();
+    	if(mPageEventOverscrollTop != null) pc.overscrollTop = mPageEventOverscrollTop.getValue();
+    	if(mPageEventOverscrollBottom != null) pc.overscrollBottom = mPageEventOverscrollBottom.getValue();
     	if(mPageEventBgLongTap != null) pc.bgLongTap = mPageEventBgLongTap.getValue();
     	if(mPageEventSwipeLeft != null) pc.swipeLeft = mPageEventSwipeLeft.getValue();
     	if(mPageEventSwipeRight != null) pc.swipeRight = mPageEventSwipeRight.getValue();
@@ -2059,6 +2067,8 @@ public class Customize extends ResourceWrapperActivity implements
 	private LLPreferenceEventAction mGCEventSwipe2Right;
 	private LLPreferenceEventAction mGCEventSwipe2Up;
 	private LLPreferenceEventAction mGCEventSwipe2Down;
+	private LLPreferenceEventAction mGCEventOverscrollTop;
+	private LLPreferenceEventAction mGCEventOverscrollBottom;
 	private LLPreferenceEventAction mGCEventScreenOn;
 	private LLPreferenceEventAction mGCEventScreenOff;
 	private LLPreferenceEventAction mGCEventOrientationPortrait;
@@ -2193,6 +2203,8 @@ public class Customize extends ResourceWrapperActivity implements
 	private LLPreferenceEventAction mPageEventSwipeLeft;
 	private LLPreferenceEventAction mPageEventSwipeRight;
 	private LLPreferenceEventAction mPageEventSwipeUp;
+	private LLPreferenceEventAction mPageEventOverscrollTop;
+	private LLPreferenceEventAction mPageEventOverscrollBottom;
 	private LLPreferenceEventAction mPageEventSwipeDown;
 	private LLPreferenceEventAction mPageEventSwipe2Left;
 	private LLPreferenceEventAction mPageEventSwipe2Right;

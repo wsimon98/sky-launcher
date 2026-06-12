@@ -40,6 +40,10 @@
     <string name="tr_fl_t">Feature unavailable</string>
     <!-- the settings selector: Desktop / Sky / Android -->
     <string name="lightning">Sky</string>
+
+    <!-- pull-past-edge events (new in Sky Launcher) -->
+    <string name="ev_ostop">Pull beyond top</string>
+    <string name="ev_osbot">Pull beyond bottom</string>
     <string name="tss">Sky Script</string>
     <string name="tsv">Sky Variable</string>
     <string name="pr_s">To accomplish this task, Sky Launcher needs your permission:</string>

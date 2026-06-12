@@ -304,6 +304,7 @@ public class ItemLayout extends ViewGroup {
 
     private boolean mAllowOverScroll; // ability to scroll without bounce effect (used for dashboard layout)
     private float mMinDx, mMaxDx, mMinDy, mMaxDy;
+    private float mPullPastEdgeDy; // see checkLimits / pull-past-edge events
     private float mOverDx, mOverDy;
 
     private float mCurrentScale=1;
@@ -2621,6 +2622,19 @@ public class ItemLayout extends ViewGroup {
         case MotionEvent.ACTION_CANCEL:
         	mLastTouchedItemView = null;
             mAutoScrolling = false;
+            // pull-past-edge gesture: the drag is already clamped at an edge
+            // and the finger traveled significantly beyond it
+            if(action==MotionEvent.ACTION_UP && mGestureMode==GESTURE_DRAG && !mEditMode
+                    && !mDragHorizontal && Math.abs(mPullPastEdgeDy)*6 > height) {
+                final boolean past_top = mPullPastEdgeDy > 0;
+                mPullPastEdgeDy = 0;
+                if(mScreen != null) {
+                    if(past_top) mScreen.onItemLayoutPullPastTop(this);
+                    else mScreen.onItemLayoutPullPastBottom(this);
+                }
+            } else {
+                mPullPastEdgeDy = 0;
+            }
             if(mMyMotionTarget!=null) {
             	dispatchTransformedEventToMotionTarget(mMyMotionTarget, ev, false);
             	mMyMotionTarget=null;
@@ -3292,6 +3306,13 @@ public class ItemLayout extends ViewGroup {
     }
 
     private float[] checkLimits(float dx, float dy) {
+        // raw vertical pull beyond the scroll limits, used to detect
+        // pull-past-edge gestures (positive: pulling down at the top edge,
+        // negative: pulling up at the bottom edge)
+        if(dy>mMaxDy) mPullPastEdgeDy = dy-mMaxDy;
+        else if(dy<mMinDy) mPullPastEdgeDy = dy-mMinDy;
+        else mPullPastEdgeDy = 0;
+
         if(mPage.config.overScrollMode==OverScrollMode.NONE) {
             boolean overscroll = false;
             if(dx>mMaxDx) {

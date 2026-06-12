@@ -57,6 +57,9 @@ public final class SkyProviders {
         providers.add(new PanelsProvider(ctx));
         providers.add(new ScriptsProvider(ctx));
         providers.add(new CommandsProvider(ctx));
+        if (net.pierrox.lightning_launcher.sky.SkyConfig.getInstance(ctx.activity).tags) {
+            providers.add(new TagsProvider(ctx));
+        }
         return providers;
     }
 
@@ -228,6 +231,50 @@ public final class SkyProviders {
                 }
             } catch (Exception e) {
                 // pass
+            }
+            return out;
+        }
+    }
+
+    /** Apps by tag: query "#games" lists every app tagged games. */
+    public static class TagsProvider implements SearchProvider {
+        private final SkyContext mCtx;
+
+        public TagsProvider(SkyContext ctx) { mCtx = ctx; }
+
+        @Override public String name() { return "Tags"; }
+
+        @Override
+        public List<SearchResult> search(String query, int max) {
+            ArrayList<SearchResult> out = new ArrayList<>();
+            if (query.isEmpty() || query.charAt(0) != '#' || query.length() < 2) return out;
+            net.pierrox.lightning_launcher.sky.tags.SkyTags tags =
+                    new net.pierrox.lightning_launcher.sky.tags.SkyTags(mCtx.activity);
+            final PackageManager pm = mCtx.activity.getPackageManager();
+            for (String component : tags.componentsForTagPrefix(query.substring(1))) {
+                final ComponentName cn = ComponentName.unflattenFromString(component);
+                if (cn == null) continue;
+                String label;
+                try {
+                    label = String.valueOf(pm.getActivityInfo(cn, 0).loadLabel(pm));
+                } catch (Exception e) {
+                    continue; // app gone: skip
+                }
+                out.add(new SearchResult(label, "Tagged app", new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            mCtx.activity.startActivity(new Intent(Intent.ACTION_MAIN)
+                                    .addCategory(Intent.CATEGORY_LAUNCHER)
+                                    .setComponent(cn)
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                            | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED));
+                        } catch (Exception e) {
+                            // pass
+                        }
+                    }
+                }));
+                if (out.size() >= max) break;
             }
             return out;
         }

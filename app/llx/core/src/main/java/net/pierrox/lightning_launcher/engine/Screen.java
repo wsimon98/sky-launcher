@@ -2472,6 +2472,14 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         runActionForItemLayout(item_layout, "C_SWIPE_UP", "swipeUp");
     }
 
+    public void onItemLayoutPullPastTop(ItemLayout item_layout) {
+        runActionForItemLayout(item_layout, "C_OVERSCROLL_TOP", "overscrollTop");
+    }
+
+    public void onItemLayoutPullPastBottom(ItemLayout item_layout) {
+        runActionForItemLayout(item_layout, "C_OVERSCROLL_BOTTOM", "overscrollBottom");
+    }
+
     @Override
     public void onItemLayoutSwipeDown(ItemLayout item_layout) {
         runActionForItemLayout(item_layout, "C_SWIPE_DOWN", "swipeDown");

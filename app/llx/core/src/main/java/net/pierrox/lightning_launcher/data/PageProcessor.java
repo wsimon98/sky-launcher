@@ -122,6 +122,8 @@ public class PageProcessor {
                 postProcessEventAction(gc.swipe2Left);
                 postProcessEventAction(gc.swipe2Right);
                 postProcessEventAction(gc.swipe2Up);
+                postProcessEventAction(gc.overscrollTop);
+                postProcessEventAction(gc.overscrollBottom);
                 postProcessEventAction(gc.swipe2Down);
                 postProcessEventAction(gc.screenOff);
                 postProcessEventAction(gc.screenOn);
@@ -264,6 +266,8 @@ public class PageProcessor {
         postProcessEventAction(c.swipe2Left);
         postProcessEventAction(c.swipe2Right);
         postProcessEventAction(c.swipe2Up);
+        postProcessEventAction(c.overscrollTop);
+        postProcessEventAction(c.overscrollBottom);
         postProcessEventAction(c.swipe2Down);
         postProcessEventAction(c.screenOff);
         postProcessEventAction(c.screenOn);

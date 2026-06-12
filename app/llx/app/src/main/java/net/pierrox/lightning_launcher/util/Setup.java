@@ -457,6 +457,11 @@ public class Setup {
         config.screenOrientation = PageConfig.ScreenOrientation.PORTRAIT;
 //        config.defaultItemConfig.rotate = true;
 
+        // pulling past the first or last entry closes the drawer by default;
+        // both events are customizable in the app drawer settings
+        config.overscrollTop = new EventAction(GlobalConfig.BACK, null);
+        config.overscrollBottom = new EventAction(GlobalConfig.BACK, null);
+
         drawer.items = Utils.loadAppDrawerShortcuts(drawer);
         Utils.layoutItemsInTable(config, drawer.items, true);
 

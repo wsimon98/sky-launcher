@@ -149,6 +149,7 @@ public class SkyConfig {
             case "commandPalette": commandPalette = enabled; break;
             case "globalSearch": globalSearch = enabled; break;
             case "fileSystemFolders": fileSystemFolders = enabled; break;
+            case "tags": tags = enabled; break;
             default: return;
         }
         mode = MODE_CUSTOM;
@@ -233,7 +234,8 @@ public class SkyConfig {
     public void ensureModernGestureDefaults(Context context, LightningEngine engine) {
         // v3: the old default template also bound swipeUp/swipe2Up to the user
         // menu at the PAGE level, which shadows the global config entirely.
-        File marker = new File(context.getFilesDir(), "sky_modern_defaults_applied_v3");
+        // v4: app drawer pull-past-edge events default to closing the drawer.
+        File marker = new File(context.getFilesDir(), "sky_modern_defaults_applied_v4");
         if (marker.exists() || engine == null) return;
         GlobalConfig gc = engine.getGlobalConfig();
         boolean changed = false;
@@ -277,6 +279,27 @@ public class SkyConfig {
                     home.setModified();
                     home.saveConfig();
                     home.notifyModified();
+                }
+            }
+            // v4: drawer pull-past-edge defaults (close the drawer), only when
+            // the events are still unbound
+            Page drawer = engine.getOrLoadPage(Page.APP_DRAWER_PAGE);
+            if (drawer != null && drawer.config != null) {
+                boolean drawerChanged = false;
+                if (drawer.config.overscrollTop == null
+                        || drawer.config.overscrollTop.action == GlobalConfig.UNSET) {
+                    drawer.config.overscrollTop = new EventAction(GlobalConfig.BACK, null);
+                    drawerChanged = true;
+                }
+                if (drawer.config.overscrollBottom == null
+                        || drawer.config.overscrollBottom.action == GlobalConfig.UNSET) {
+                    drawer.config.overscrollBottom = new EventAction(GlobalConfig.BACK, null);
+                    drawerChanged = true;
+                }
+                if (drawerChanged) {
+                    drawer.setModified();
+                    drawer.saveConfig();
+                    drawer.notifyModified();
                 }
             }
         } catch (Exception e) {

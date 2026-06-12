@@ -114,6 +114,9 @@ public class GlobalConfig extends JsonLoader {
 	public EventAction swipe2Right = new EventAction(NEXT_DESKTOP, null);
 	public EventAction swipe2Up = EventAction.NOTHING();
 	public EventAction swipe2Down = EventAction.NOTHING();
+	// pull-past-edge events (see PageConfig.overscrollTop/overscrollBottom)
+	public EventAction overscrollTop = EventAction.NOTHING();
+	public EventAction overscrollBottom = EventAction.NOTHING();
 	public EventAction screenOn = EventAction.NOTHING();
 	public EventAction screenOff = EventAction.NOTHING();
     public EventAction orientationPortrait = EventAction.NOTHING();

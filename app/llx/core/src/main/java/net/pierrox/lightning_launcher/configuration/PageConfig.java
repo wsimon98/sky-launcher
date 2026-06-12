@@ -150,6 +150,10 @@ public class PageConfig extends JsonLoader {
 	public EventAction swipe2Right = EventAction.UNSET();
 	public EventAction swipe2Up = EventAction.UNSET();
 	public EventAction swipe2Down = EventAction.UNSET();
+	// fired when the container is already at its top (resp. bottom) edge and
+	// the user keeps pulling further; used by the app drawer to close itself
+	public EventAction overscrollTop = EventAction.UNSET();
+	public EventAction overscrollBottom = EventAction.UNSET();
 	public EventAction screenOn = EventAction.UNSET();
 	public EventAction screenOff = EventAction.UNSET();
     public EventAction orientationPortrait = EventAction.UNSET();

@@ -135,6 +135,34 @@ De-branding (override strings in app/sky_branding.xml; core untouched):
   Lightning Launcher), template compatibility wording (reworded but credits
   LL), THIRD_PARTY/About credits, wiki/community links (classic docs).
 
+## 2026-06-12 — v0.5.0: drawer pull-past-edge gestures, fox icon, Tags module
+
+New gesture events (classic-LLX style, fully bindable):
+- "Pull beyond top" / "Pull beyond bottom": fire when a container is already
+  at its scroll limit and the finger keeps pulling significantly further
+  (>1/6 screen height past the edge, vertical drags only). Implemented in
+  ItemLayout.checkLimits (raw clamp overshoot) + ACTION_UP dispatch; new
+  PageConfig/GlobalConfig EventAction fields overscrollTop/overscrollBottom;
+  rows in page events + global events settings; template-import processing.
+- App drawer defaults: both events close the drawer (BACK), set for fresh
+  installs in Setup.setupAppDrawer and via migration v4 for existing ones
+  (only when unbound). Fully customizable per page like any other event.
+
+New icon: flat tribal red fox (skyfox), transparent background, rendered
+from graphics/skyfox-icon.svg to all densities (mdpi..xxxhdpi).
+
+Tags module (final borrow-idea phase, Neo Launcher idea-only, original code):
+- sky_tags.json maps app components to tag lists; metadata only.
+- Tag manager dialog (Sky Modules > Manage tags…, or :tags command).
+- GlobalSearch understands "#tag" queries via a TagsProvider (only active
+  while the Tags module is enabled).
+- Profiles (work profile / private space) remain deferred: needs a managed
+  device to test against; tracked for a later phase.
+
+Borrow-source phases now complete: Pie Launcher (EdgeWheel) /
+T-UI (Command Palette) / Kvaesitso idea (GlobalSearch) /
+SimpleFolderLauncher (FS Folders) / Neo idea (Tags) — all as original code.
+
 ## 2026-06-11 — RESULT: BUILD SUCCESSFUL
 
 Toolchain: Gradle 8.9 / AGP 8.7.3 / JDK 21 / NDK 28.2.13676358 / cmake 3.22.1
