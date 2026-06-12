@@ -99,6 +99,10 @@ public final class ActionsDescription {
         new Action(GlobalConfig.CATEGORY, R.string.acd_a, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP |Action.FLAG_TYPE_APP_DRAWER |Action.FLAG_TYPE_SCRIPT, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.RUN_SCRIPT, R.string.an_rs, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER | Action.FLAG_TYPE_SCRIPT, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.SET_VARIABLE, R.string.an_sv, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
+            // Sky optional module actions: only listed while their module is enabled
+            new Action(GlobalConfig.SKY_EDGE_WHEEL, R.string.an_sky_ew, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
+            new Action(GlobalConfig.SKY_COMMAND_PALETTE, R.string.an_sky_cp, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
+            new Action(GlobalConfig.SKY_GLOBAL_SEARCH, R.string.an_sky_gs, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.UNSET, R.string.an_u, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER | Action.FLAG_TYPE_SCRIPT, Build.VERSION_CODES.FROYO),
     };
 
@@ -111,8 +115,14 @@ public final class ActionsDescription {
         mActions = new ArrayList<>(sAllActions.length);
         mType = type;
         mForItem = forItem;
+        net.pierrox.lightning_launcher.sky.SkyConfig skyConfig =
+                net.pierrox.lightning_launcher.sky.SkyConfig.getInstance(context);
         for (Action action : sAllActions) {
             boolean isItem = (action.flags & Action.FLAG_ITEM) == Action.FLAG_ITEM;
+            if (net.pierrox.lightning_launcher.sky.SkyConfig.isSkyAction(action.action)
+                    && !skyConfig.isActionEnabled(action.action)) {
+                continue;
+            }
             if (((action.flags&type) == type) && (forItem || !isItem) && Build.VERSION.SDK_INT >= action.minSdkVersion) {
                 mActions.add(action);
             }

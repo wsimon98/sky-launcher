@@ -363,6 +363,20 @@
                  android:permission="net.pierrox.lightning_launcher.USE_SCRIPT_SERVICE"
                  android:exported="true"/>
 
+        <!-- Sky Launcher mode and optional module settings -->
+        <activity
+            android:name="net.pierrox.lightning_launcher.sky.SkyModulesActivity"
+            android:label="@string/sky_modules"
+            android:icon="@drawable/icon"
+            android:excludeFromRecents="true"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
 	</application>
 
 </manifest>

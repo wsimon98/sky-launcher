@@ -104,7 +104,6 @@ import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 import com.boombuler.system.appwidgetpicker.AppWidgetPickerActivity;
-import com.google.android.hotword.client.HotwordServiceClient;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import net.pierrox.lightning_launcher.API;
@@ -436,8 +435,6 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
 
     private int mNoScriptCounter;
-
-    private HotwordServiceClient mHotwordServiceClient;
 
     private boolean mPausedBecauseOfLaunch;
 
@@ -800,9 +797,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         mEngine.cancelDelayedSaveData();
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && getClass() == Dashboard.class && mSystemConfig.hotwords && mHotwordServiceClient != null) {
-            mHotwordServiceClient.requestHotwordDetection(true);
-        }
+        net.pierrox.lightning_launcher.sky.SkySetup.onDashboardResume(this, mEngine);
 
 		if(mModifyingWidget != null) {
             // reload widget that may have been changed in another activity/process (out of the launcher control)
@@ -837,10 +832,6 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 mDialog.dismiss();
             }
             mDialog = null;
-        }
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && getClass() == Dashboard.class && mSystemConfig.hotwords && mHotwordServiceClient != null) {
-            mHotwordServiceClient.requestHotwordDetection(false);
         }
 
         mScreen.pause();
@@ -911,32 +902,9 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         }
     }
 
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && getClass() == Dashboard.class) {
-            if(mSystemConfig.hotwords) {
-                if (mHotwordServiceClient == null) {
-                    mHotwordServiceClient = new HotwordServiceClient(this);
-                }
-                mHotwordServiceClient.onAttachedToWindow();
-                mHotwordServiceClient.requestHotwordDetection(true);
-            }
-        }
-    }
-
-    @Override
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && getClass() == Dashboard.class) {
-            if(mSystemConfig.hotwords) {
-                mHotwordServiceClient.requestHotwordDetection(false);
-                mHotwordServiceClient.onDetachedFromWindow();
-            }
-        }
-    }
+    // The "OK Google" hotword hook (HotwordServiceClient) was removed: binding
+    // to the Google app's hotword service crashes the launcher on modern
+    // devices, and system-level hotword detection works without it.
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -7272,6 +7240,29 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
                 case GlobalConfig.SEARCH:
                     startSearch(null, false, null, true);
+                    break;
+
+                // Sky optional modules: these actions only do something while
+                // their module is enabled, so leftover bindings are harmless
+                case GlobalConfig.SKY_EDGE_WHEEL:
+                    if(net.pierrox.lightning_launcher.sky.SkyConfig.getInstance(mContext).edgeWheel) {
+                        net.pierrox.lightning_launcher.sky.edgewheel.EdgeWheelOverlay.show(
+                                new net.pierrox.lightning_launcher.sky.SkyContext(Dashboard.this, this, engine));
+                    }
+                    break;
+
+                case GlobalConfig.SKY_COMMAND_PALETTE:
+                    if(net.pierrox.lightning_launcher.sky.SkyConfig.getInstance(mContext).commandPalette) {
+                        net.pierrox.lightning_launcher.sky.commands.CommandPaletteDialog.show(
+                                new net.pierrox.lightning_launcher.sky.SkyContext(Dashboard.this, this, engine));
+                    }
+                    break;
+
+                case GlobalConfig.SKY_GLOBAL_SEARCH:
+                    if(net.pierrox.lightning_launcher.sky.SkyConfig.getInstance(mContext).globalSearch) {
+                        net.pierrox.lightning_launcher.sky.search.GlobalSearchDialog.show(
+                                new net.pierrox.lightning_launcher.sky.SkyContext(Dashboard.this, this, engine));
+                    }
                     break;
 
                 case GlobalConfig.SEARCH_APP:

@@ -82,6 +82,12 @@ public class GlobalConfig extends JsonLoader {
     public static final int HIDE_FLOATING_DESKTOP=43;
     public static final int OPEN_HIERARCHY_SCREEN=44;
     public static final int SHOW_APP_SHORTCUTS=45;
+
+    // Sky Launcher optional module actions. These are bindable like any other
+    // action but only execute when the matching Sky module is enabled.
+    public static final int SKY_EDGE_WHEEL=46;
+    public static final int SKY_COMMAND_PALETTE=47;
+    public static final int SKY_GLOBAL_SEARCH=48;
     // update script EventHandler accordingly
 
     public int version=1;
@@ -99,8 +105,10 @@ public class GlobalConfig extends JsonLoader {
 	public EventAction bgLongTap = new EventAction(LAUNCHER_MENU, null);
 	public EventAction swipeLeft = EventAction.NOTHING();
 	public EventAction swipeRight = EventAction.NOTHING();
-	public EventAction swipeUp = EventAction.NOTHING();
-	public EventAction swipeDown = EventAction.NOTHING();
+	// modern defaults: swipe up opens the app drawer, swipe down opens the
+	// notification shade (classic LLX had both unset; still fully rebindable)
+	public EventAction swipeUp = new EventAction(APP_DRAWER, null);
+	public EventAction swipeDown = new EventAction(SHOW_NOTIFICATIONS, null);
 	public EventAction swipe2Left = new EventAction(PREVIOUS_DESKTOP, null);
 	public EventAction swipe2Right = new EventAction(NEXT_DESKTOP, null);
 	public EventAction swipe2Up = EventAction.NOTHING();

@@ -2,4 +2,10 @@
 <!-- Sky Launcher branding: overrides core's app_name at resource merge time -->
 <resources>
     <string name="app_name" translatable="false">Sky Launcher</string>
+
+    <!-- Sky module action names (shown in gesture/event action pickers) -->
+    <string name="an_sky_ew">EdgeWheel</string>
+    <string name="an_sky_cp">Command Palette</string>
+    <string name="an_sky_gs">GlobalSearch</string>
+    <string name="sky_modules">Sky Modules</string>
 </resources>

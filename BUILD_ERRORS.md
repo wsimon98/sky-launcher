@@ -21,6 +21,41 @@ DEFERRED:
 OPEN:
 - (none — debug build green)
 
+## 2026-06-12 — v0.2.0: hotword crash fix + Sky mode system + 3 module prototypes
+
+Fixed (reported from device testing):
+- Enabling the "OK Google" option crashed/broke the launcher. Root cause: the
+  legacy HotwordServiceClient binds to the Google app's HOTWORD_SERVICE, which
+  modern Google app versions removed/protect (SecurityException at Dashboard
+  attach => crash loop; plus an unguarded NPE on detach). The whole hook was
+  removed: Dashboard code, Customize checkbox, com.google.android.hotword.*
+  classes deleted. SystemConfig.hotwords field kept so old configs still parse.
+  Installing the fixed APK over a broken install recovers it (layout intact).
+
+Modernization (defaults only — everything stays rebindable in Events settings):
+- swipe up    -> App drawer        (was: nothing)
+- swipe down  -> Notification shade (was: nothing)
+- one-time migration applies these to existing layouts only if those gestures
+  were still unbound
+- hardware menu-key / search-key event settings hidden unless expert mode
+  (the bindings still fire if a device sends those keycodes)
+- optional "App drawer button" home-screen item (Sky Modules settings)
+
+New (all optional, all off in Classic LLX mode):
+- Sky mode system: first-run picker (Classic LLX / Modern Sky / Minimal),
+  sky_config.json, manual module toggle => Custom mode
+- EdgeWheel prototype (radial app launcher; Modern Sky binds 2-finger swipe up)
+- Command Palette prototype (:edit :backup :restore :restart :settings
+  :desktop :search :sky / .app .script .folder; Modern Sky binds 2-finger
+  swipe down)
+- GlobalSearch prototype (local providers: apps, shortcuts, folders, panels,
+  scripts, commands; Modern Sky binds double-tap)
+- All three exposed as classic LLX actions (bindable to any gesture/event),
+  hidden from the action picker while their module is disabled
+- "Sky Modules" settings app icon in the drawer (works in every mode)
+
+DEFERRED (unchanged): targetSdk 28 staging, LWP re-wiring, plugin ApiProvider.
+
 ## 2026-06-11 — RESULT: BUILD SUCCESSFUL
 
 Toolchain: Gradle 8.9 / AGP 8.7.3 / JDK 21 / NDK 28.2.13676358 / cmake 3.22.1

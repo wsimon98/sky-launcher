@@ -683,7 +683,7 @@ public class Customize extends ResourceWrapperActivity implements
             }
             copyPreferencesToPageConfiguration();
 		} else {
-            if(preference == mGCAppStyle || preference == mGCImagePoolSize || preference == mGCHotwords) {
+            if(preference == mGCAppStyle || preference == mGCImagePoolSize) {
                 saveSystemAndGlobalConfig();
                 LLApp.get().saveAllData();
                 finish();
@@ -1298,11 +1298,19 @@ public class Customize extends ResourceWrapperActivity implements
 			if (!is_app_drawer) {
                 if (!is_folder_page && !is_embedded_folder_page) {
                     mPreferencesPageEvents.add(mPageEventHomeKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_home, pc.homeKey, EventAction.UNSET(), actions));
-                    mPreferencesPageEvents.add(mPageEventMenuKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_menu, pc.menuKey, EventAction.UNSET(), actions));
-                    mPreferencesPageEvents.add(mPageEventLongMenuKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_menul, pc.longMenuKey, EventAction.UNSET(), actions));
+                    // hardware menu/search keys no longer exist on modern
+                    // devices: the bindings still work, but the settings rows
+                    // are only shown in expert mode
+                    mPageEventMenuKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_menu, pc.menuKey, EventAction.UNSET(), actions);
+                    mPageEventLongMenuKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_menul, pc.longMenuKey, EventAction.UNSET(), actions);
+                    mPageEventSearchKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_search, pc.searchKey, EventAction.UNSET(), actions);
+                    if(mSystemConfig.expertMode) {
+                        mPreferencesPageEvents.add(mPageEventMenuKey);
+                        mPreferencesPageEvents.add(mPageEventLongMenuKey);
+                        mPreferencesPageEvents.add(mPageEventSearchKey);
+                    }
                     mPreferencesPageEvents.add(mPageEventBackKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_back, pc.backKey, EventAction.UNSET(), actions));
                     mPreferencesPageEvents.add(mPageEventLongBackKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_backl, pc.longBackKey, EventAction.UNSET(), actions));
-                    mPreferencesPageEvents.add(mPageEventSearchKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_search, pc.searchKey, EventAction.UNSET(), actions));
                 }
                 mPreferencesPageEvents.add(mPageEventBgLongTap = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_bg_ltap, pc.bgLongTap, EventAction.UNSET(), actions));
             }
@@ -1446,9 +1454,7 @@ public class Customize extends ResourceWrapperActivity implements
             }
         }
 		mPreferencesGlobalConfig.add(mGCPageAnimation = new LLPreferenceList(this, ID_mGCPageAnimation, R.string.page_anim_t, R.array.page_anim_e, mGlobalConfig.pageAnimation, null));
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mPreferencesGlobalConfig.add(mGCHotwords = new LLPreferenceCheckBox(this, ID_mGCHotwords, R.string.hw_t, R.string.hw_s, mSystemConfig.hotwords, null));
-        }
+        // "OK Google" hotword preference removed (dead Google hook, crashes on modern devices)
         if(mSystemConfig.expertMode) {
 			mPreferencesGlobalConfig.add(mGCRunScripts = new LLPreferenceCheckBox(this, ID_mGCRunScripts, R.string.rs_t, R.string.rs_s, mGlobalConfig.runScripts && !LLApp.get().isFreeVersion(), null));
 			mPreferencesGlobalConfig.add(mGCKeepInMemory = new LLPreferenceCheckBox(this, ID_mGCKeepInMemory, R.string.keep_in_memory_t, R.string.keep_in_memory_s, mSystemConfig.keepInMemory, null));
@@ -1472,11 +1478,18 @@ public class Customize extends ResourceWrapperActivity implements
 
 		mPreferencesGlobalConfigEvents = new ArrayList<LLPreference>(16);
 		mPreferencesGlobalConfigEvents.add(mGCEventHomeKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_home, mGlobalConfig.homeKey, null, desktopActions));
-		mPreferencesGlobalConfigEvents.add(mGCEventMenuKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_menu, mGlobalConfig.menuKey, null, desktopActions));
-		mPreferencesGlobalConfigEvents.add(mGCEventLongMenuKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_menul, mGlobalConfig.longMenuKey, null, desktopActions));
+		// hardware menu/search keys no longer exist on modern devices: the
+		// bindings still work, but the settings rows are only shown in expert mode
+		mGCEventMenuKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_menu, mGlobalConfig.menuKey, null, desktopActions);
+		mGCEventLongMenuKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_menul, mGlobalConfig.longMenuKey, null, desktopActions);
+		mGCEventSearchKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_search, mGlobalConfig.searchKey, null, desktopActions);
+		if(mSystemConfig.expertMode) {
+			mPreferencesGlobalConfigEvents.add(mGCEventMenuKey);
+			mPreferencesGlobalConfigEvents.add(mGCEventLongMenuKey);
+			mPreferencesGlobalConfigEvents.add(mGCEventSearchKey);
+		}
 		mPreferencesGlobalConfigEvents.add(mGCEventBackKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_back, mGlobalConfig.backKey, null, desktopActions));
 		mPreferencesGlobalConfigEvents.add(mGCEventLongBackKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_backl, mGlobalConfig.longBackKey, null, desktopActions));
-		mPreferencesGlobalConfigEvents.add(mGCEventSearchKey = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_search, mGlobalConfig.searchKey, null, desktopActions));
 		mPreferencesGlobalConfigEvents.add(mGCEventItemTap = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_item_tap, mGlobalConfig.itemTap, null, itemActions));
 		mPreferencesGlobalConfigEvents.add(mGCEventItemLongTap = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_item_ltap, mGlobalConfig.itemLongTap, null, itemActions));
 		mPreferencesGlobalConfigEvents.add(mGCEventBgTap = new LLPreferenceEventAction(this, ID_NONE, R.string.ev_bg_tap, mGlobalConfig.bgTap, null, desktopActions));
@@ -1554,7 +1567,6 @@ public class Customize extends ResourceWrapperActivity implements
 	private void copyPreferencesToSystemAndGlobalConfiguration() {
         if(mGCAppStyle != null) mSystemConfig.appStyle = (SystemConfig.AppStyle) mGCAppStyle.getValueEnum();
 		mGlobalConfig.pageAnimation = (PageAnimation) mGCPageAnimation.getValueEnum();
-        if(mGCHotwords != null) mSystemConfig.hotwords = mGCHotwords.isChecked();
 		if(mSystemConfig.expertMode) {
 			if(!LLApp.get().isFreeVersion()) mGlobalConfig.runScripts = mGCRunScripts.isChecked();
 			mSystemConfig.keepInMemory = mGCKeepInMemory.isChecked();
@@ -2014,7 +2026,6 @@ public class Customize extends ResourceWrapperActivity implements
 	private LLPreference mGCEventsCategory;
 	private LLPreference mGCLockScreenCategory;
 	private LLPreference mGCOverlayCategory;
-	private LLPreferenceCheckBox mGCHotwords;
 	private LLPreferenceCheckBox mGCRunScripts;
 
 	private LLPreferenceCheckBox mGCAutoEdit;
@@ -2308,7 +2319,6 @@ public class Customize extends ResourceWrapperActivity implements
 //    private static final int ID_mPGAppDrawerAB = 155;
     private static final int ID_mPGAppDrawerABBackground = 156;
     private static final int ID_mPGAppDrawerABHide = 157;
-    private static final int ID_mGCHotwords = 158;
     private static final int ID_mPGAppDrawerABDisplayOnScroll = 159;
     private static final int ID_mPGZoomScrollWrap = 161;
     private static final int ID_mPGSystemBarsStatusBarOverlap = 163;
