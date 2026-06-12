@@ -103,6 +103,7 @@ public final class ActionsDescription {
             new Action(GlobalConfig.SKY_EDGE_WHEEL, R.string.an_sky_ew, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.SKY_COMMAND_PALETTE, R.string.an_sky_cp, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.SKY_GLOBAL_SEARCH, R.string.an_sky_gs, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
+            new Action(GlobalConfig.SKY_FS_FOLDERS, R.string.an_sky_ff, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.UNSET, R.string.an_u, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER | Action.FLAG_TYPE_SCRIPT, Build.VERSION_CODES.FROYO),
     };
 

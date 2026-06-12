@@ -88,6 +88,7 @@ public class GlobalConfig extends JsonLoader {
     public static final int SKY_EDGE_WHEEL=46;
     public static final int SKY_COMMAND_PALETTE=47;
     public static final int SKY_GLOBAL_SEARCH=48;
+    public static final int SKY_FS_FOLDERS=49;
     // update script EventHandler accordingly
 
     public int version=1;

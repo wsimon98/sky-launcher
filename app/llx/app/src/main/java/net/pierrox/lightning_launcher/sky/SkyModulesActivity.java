@@ -58,7 +58,7 @@ public class SkyModulesActivity extends Activity {
 
     private SkyConfig mConfig;
     private RadioButton mRadioClassic, mRadioModern, mRadioMinimal, mRadioCustom;
-    private CheckBox mCheckEdgeWheel, mCheckPalette, mCheckSearch, mCheckDrawerButton;
+    private CheckBox mCheckEdgeWheel, mCheckPalette, mCheckSearch, mCheckFsFolders, mCheckDrawerButton;
     private boolean mUpdating;
 
     @Override
@@ -111,6 +111,8 @@ public class SkyModulesActivity extends Activity {
                 "Typed commands like :edit or .app (two-finger swipe down when bound)", "commandPalette");
         mCheckSearch = check(root, "GlobalSearch",
                 "Local search across apps, items and scripts (double tap when bound)", "globalSearch");
+        mCheckFsFolders = check(root, "File-System Folders",
+                "Organize apps, commands and links in a file tree (open via the :tree command or a bound gesture). Classic folders are untouched", "fileSystemFolders");
 
         root.addView(header("Home screen"));
 
@@ -194,6 +196,7 @@ public class SkyModulesActivity extends Activity {
         mCheckEdgeWheel.setChecked(mConfig.edgeWheel);
         mCheckPalette.setChecked(mConfig.commandPalette);
         mCheckSearch.setChecked(mConfig.globalSearch);
+        mCheckFsFolders.setChecked(mConfig.fileSystemFolders);
         mCheckDrawerButton.setChecked(mConfig.appDrawerButtonItemId != -1);
         mUpdating = false;
     }

@@ -7265,6 +7265,13 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     }
                     break;
 
+                case GlobalConfig.SKY_FS_FOLDERS:
+                    if(net.pierrox.lightning_launcher.sky.SkyConfig.getInstance(mContext).fileSystemFolders) {
+                        net.pierrox.lightning_launcher.sky.fsfolders.FsFoldersDialog.show(
+                                new net.pierrox.lightning_launcher.sky.SkyContext(Dashboard.this, this, engine));
+                    }
+                    break;
+
                 case GlobalConfig.SEARCH_APP:
                     intent = new Intent(mContext, AppDrawerX.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);

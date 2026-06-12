@@ -70,6 +70,7 @@ public class CommandRegistry {
             new BuiltIn(":settings", "Open launcher settings", false),
             new BuiltIn(":desktop", "Choose a desktop to go to", false),
             new BuiltIn(":search", "Open GlobalSearch (when enabled)", false),
+            new BuiltIn(":tree", "Open File-System Folders (when enabled)", false),
             new BuiltIn(":sky", "Open Sky modules settings", false),
             new BuiltIn(".app", "Launch an app by name", true),
             new BuiltIn(".script", "Run a script by name", true),
@@ -139,6 +140,9 @@ public class CommandRegistry {
                 return CommandResult.ok();
             case ":search":
                 mCtx.runAction(GlobalConfig.SKY_GLOBAL_SEARCH, null);
+                return CommandResult.ok();
+            case ":tree":
+                mCtx.runAction(GlobalConfig.SKY_FS_FOLDERS, null);
                 return CommandResult.ok();
             case ":sky":
                 mCtx.activity.startActivity(new Intent(mCtx.activity, SkyModulesActivity.class));

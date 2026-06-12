@@ -7,5 +7,6 @@
     <string name="an_sky_ew">EdgeWheel</string>
     <string name="an_sky_cp">Command Palette</string>
     <string name="an_sky_gs">GlobalSearch</string>
+    <string name="an_sky_ff">File-System Folders</string>
     <string name="sky_modules">Sky Modules</string>
 </resources>

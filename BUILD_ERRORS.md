@@ -56,6 +56,30 @@ New (all optional, all off in Classic LLX mode):
 
 DEFERRED (unchanged): targetSdk 28 staging, LWP re-wiring, plugin ApiProvider.
 
+## 2026-06-12 — v0.3.0: swipe-up fix + File-System Folders module
+
+Fixed (reported from device testing):
+- Swipe up on empty canvas did not open the app drawer even with the binding
+  set. Root cause: ItemLayout only fires single-finger vertical swipe events
+  when the desktop cannot scroll vertically (!mAllowScrollY); the default
+  scrollingDirection=AUTO marks the canvas scrollable whenever the items
+  bounding box pokes >0.5px past the screen, so the gesture became a canvas
+  scroll. Fix: migration v2 sets the HOME desktop to horizontal-only
+  scrolling when still on AUTO (modern phone convention; per-desktop setting,
+  reversible in launcher settings). Marker renamed so the v2 migration also
+  runs on devices that already ran v1.
+
+New (optional, off in Classic LLX mode, on in Modern Sky):
+- File-System Folders prototype (module 4 of the plan): a metadata tree
+  (sky_fsfolders.json) browsed in a dialog — folders, apps, palette commands
+  and links; add/remove/navigate; classic LLX folders completely untouched.
+  Open via the :tree command, a bound gesture/event (new bindable action),
+  or anything that can run a launcher action.
+
+Remaining roadmap after v0.3.0: Tags & Profiles module, Theme Presets,
+script permission wrapper (plan Phase 4), sky-backup.zip format incl. module
+configs, targetSdk raise, LWP + plugin API re-wiring, F-Droid metadata.
+
 ## 2026-06-11 — RESULT: BUILD SUCCESSFUL
 
 Toolchain: Gradle 8.9 / AGP 8.7.3 / JDK 21 / NDK 28.2.13676358 / cmake 3.22.1

@@ -27,8 +27,10 @@ package net.pierrox.lightning_launcher.sky;
 import android.content.Context;
 
 import net.pierrox.lightning_launcher.configuration.GlobalConfig;
+import net.pierrox.lightning_launcher.configuration.PageConfig;
 import net.pierrox.lightning_launcher.data.EventAction;
 import net.pierrox.lightning_launcher.data.FileUtils;
+import net.pierrox.lightning_launcher.data.Page;
 import net.pierrox.lightning_launcher.engine.LightningEngine;
 
 import org.json.JSONException;
@@ -132,8 +134,8 @@ public class SkyConfig {
         edgeWheel = modern;
         commandPalette = modern;
         globalSearch = modern;
+        fileSystemFolders = modern;
         // not implemented yet, always off
-        fileSystemFolders = false;
         tags = false;
         profiles = false;
         webProviders = false;
@@ -146,6 +148,7 @@ public class SkyConfig {
             case "edgeWheel": edgeWheel = enabled; break;
             case "commandPalette": commandPalette = enabled; break;
             case "globalSearch": globalSearch = enabled; break;
+            case "fileSystemFolders": fileSystemFolders = enabled; break;
             default: return;
         }
         mode = MODE_CUSTOM;
@@ -155,7 +158,8 @@ public class SkyConfig {
     public static boolean isSkyAction(int action) {
         return action == GlobalConfig.SKY_EDGE_WHEEL
                 || action == GlobalConfig.SKY_COMMAND_PALETTE
-                || action == GlobalConfig.SKY_GLOBAL_SEARCH;
+                || action == GlobalConfig.SKY_GLOBAL_SEARCH
+                || action == GlobalConfig.SKY_FS_FOLDERS;
     }
 
     /** Whether a sky action is currently available (its module is enabled). */
@@ -164,6 +168,7 @@ public class SkyConfig {
             case GlobalConfig.SKY_EDGE_WHEEL: return edgeWheel;
             case GlobalConfig.SKY_COMMAND_PALETTE: return commandPalette;
             case GlobalConfig.SKY_GLOBAL_SEARCH: return globalSearch;
+            case GlobalConfig.SKY_FS_FOLDERS: return fileSystemFolders;
             default: return true;
         }
     }
@@ -218,9 +223,15 @@ public class SkyConfig {
      * One-time upgrade for layouts created before the modern gesture defaults:
      * if swipe up / swipe down still carry the old empty defaults, bind the
      * app drawer and the notification shade. Never touches customized bindings.
+     *
+     * v2 also sets the home desktop to horizontal-only scrolling when it is
+     * still on AUTO: with vertical scrolling allowed, the gesture engine turns
+     * a single-finger vertical swipe into a canvas scroll and the swipe events
+     * never fire (classic LLX semantics). Horizontal-only is the modern phone
+     * convention; it stays changeable per desktop in the launcher settings.
      */
     public void ensureModernGestureDefaults(Context context, LightningEngine engine) {
-        File marker = new File(context.getFilesDir(), "sky_modern_defaults_applied");
+        File marker = new File(context.getFilesDir(), "sky_modern_defaults_applied_v2");
         if (marker.exists() || engine == null) return;
         GlobalConfig gc = engine.getGlobalConfig();
         boolean changed = false;
@@ -236,6 +247,18 @@ public class SkyConfig {
         }
         if (changed) {
             engine.notifyGlobalConfigChanged();
+        }
+        try {
+            Page home = engine.getOrLoadPage(gc.homeScreen);
+            if (home != null && home.config != null
+                    && home.config.scrollingDirection == PageConfig.ScrollingDirection.AUTO) {
+                home.config.scrollingDirection = PageConfig.ScrollingDirection.X;
+                home.setModified();
+                home.saveConfig();
+                home.notifyModified();
+            }
+        } catch (Exception e) {
+            // never let the migration harm startup
         }
         try {
             FileUtils.saveStringToFile("1", marker);
