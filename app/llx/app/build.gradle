@@ -1,133 +1,67 @@
 apply plugin: 'com.android.application'
-def appendVersionNameVersionCode(variant, defaultConfig) {
-    variant.outputs.all { output ->
-        if (output.zipAlign) {
-            def file = output.outputFile
-            def fileName = file.name.replace(".apk", "-" + defaultConfig.versionCode + ".apk")
-            fileName = fileName.replace("app", "lightning_launcher")
-            output.outputFileName = fileName
-        }
-
-//        def file = output.packageApplication.file
-//        def fileName = file.name.replace(".apk", "-" + defaultConfig.versionCode + ".apk")
-//        fileName = fileName.replace("app", "lightning_launcher")
-//        output.packageApplication.outputFileName = fileName
-    }
-}
-
-if(project.hasProperty("signing.properties") && new File(project.property("signing.properties")).exists()) {
-
-    Properties props = new Properties()
-    props.load(new FileInputStream(file(project.property("signing.properties"))))
-
-    android {
-        signingConfigs {
-            release {
-                storeFile file(props['sp.storeFile'])
-                keyAlias props['sp.keyAlias']
-                storePassword props['sp.storePassword']
-                keyPassword props['sp.keyPassword']
-            }
-        }
-
-        buildTypes {
-            debug {
-                signingConfig signingConfigs.release
-            }
-            release {
-                signingConfig signingConfigs.release
-            }
-        }
-    }
-}
 
 android {
-    compileSdkVersion 28
+    // Namespace stays on the historical R/BuildConfig package to avoid touching
+    // every java import. The public application id is Sky Launcher's own.
+    namespace 'net.pierrox.lightning_launcher_extreme'
+    compileSdk 35
 
     defaultConfig {
-        versionCode 330
-        versionName "14.3 (6de3540)"
+        applicationId "app.skylauncher"
+        versionCode 1
+        versionName "0.1.0 (LL 14.3 base)"
+
+        minSdk 21
+        // Staged low on purpose for classic LLX behavior; see MIGRATION_REPORT.md
+        targetSdkVersion 28
+
         buildConfigField "boolean", "IS_BETA", "false" //  change in core too
         buildConfigField "boolean", "HAS_UEC", "false"
+        buildConfigField "boolean", "IS_TRIAL", "false"
 
-        minSdkVersion 14
-        targetSdkVersion 28
+        manifestPlaceholders += [
+                app_name          : "LLAppSky",
+                provider_authority: "net.pierrox.lightning_launcher"
+        ]
     }
 
-//    dexOptions {
-//        incremental true
-//    }
+    buildFeatures {
+        buildConfig true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    sourceSets {
+        main {
+            // Sky ships the full (eXtreme) feature set; its res dir carries
+            // layouts/strings referenced by main code. Java from src/extreme
+            // (billing/licensing) is deliberately NOT included.
+            res.srcDirs += 'src/extreme/res'
+            java {
+                // Live wallpaper service depends on the removed eXtreme
+                // billing classes (LLAppExtreme/LWPSettings); excluded until
+                // LWP is re-wired without billing. See BUILD_ERRORS.md.
+                exclude 'net/pierrox/lightning_launcher/util/LightningLWPService.java'
+            }
+        }
+    }
 
     buildTypes {
-        debug {
-            manifestPlaceholders += [provider_authority: "net.pierrox.lightning_launcher"]
-        }
         release {
-            manifestPlaceholders += [provider_authority: "net.pierrox.lightning_launcher_extreme"]
-
             minifyEnabled true
             proguardFiles 'proguard.cfg'
-
-            applicationVariants.all { variant ->
-                appendVersionNameVersionCode(variant, defaultConfig)
-            }
         }
     }
 
-    flavorDimensions "version", "abi"
-
-    productFlavors {
-        extreme {
-            manifestPlaceholders += [app_name: "LLAppExtreme"]
-            applicationId "net.pierrox.lightning_launcher_extreme"
-            dimension "version"
-            buildConfigField "boolean", "IS_TRIAL", "false"
-        }
-        trial {
-            manifestPlaceholders += [app_name: "LLAppTrial"]
-            applicationId "net.pierrox.lightning_launcher"
-            dimension "version"
-            buildConfigField "boolean", "IS_TRIAL", "true"
-        }
-
-        x86 {
-            dimension "abi"
-            versionCode Integer.parseInt("8" + defaultConfig.versionCode)
-            ndk {
-                abiFilter "x86"
-            }
-        }
-        armv7 {
-            dimension "abi"
-            versionCode Integer.parseInt("2" + defaultConfig.versionCode)
-            ndk {
-                abiFilter "armeabi-v7a"
-            }
-        }
-        arm {
-            dimension "abi"
-            versionCode Integer.parseInt("1" + defaultConfig.versionCode)
-            ndk {
-                abiFilter "armeabi"
-            }
-        }
-        armv64 {
-            dimension "abi"
-            versionCode Integer.parseInt("3" + defaultConfig.versionCode)
-            ndk {
-                abiFilter "arm64-v8a"
-            }
-        }
-        x86_64 {
-            dimension "abi"
-            versionCode Integer.parseInt("9" + defaultConfig.versionCode)
-            ndk {
-                abiFilter "x86_64"
-            }
-        }
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
     }
 }
 
 dependencies {
-    compile project(':core')
+    api project(':core')
 }

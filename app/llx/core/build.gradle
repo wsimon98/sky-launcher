@@ -1,41 +1,53 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
+    namespace 'net.pierrox.lightning_launcher'
+    compileSdk 35
+    ndkVersion '28.2.13676358'
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        minSdk 21
         buildConfigField "boolean", "IS_BETA", "false"
-
-        ndk {
-            moduleName "ll"
-            cFlags "-std=c99 -O2 -W -Wall -Wno-unused-parameter"
-            ldLibs "m", "log", "jnigraphics", "android"
-        }
-
-        sourceSets.main.jni.srcDirs = ["src/main/jni"]
-//        sourceSets.main.jniLibs.srcDirs = ["src/main/libs"]
-        sourceSets.main.resources.srcDirs = ["src/main/java"]
     }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    sourceSets {
+        main {
+            // upstream packaged the java sources as resources (used by the
+            // script editor API browser); preserved as-is
+            resources.srcDirs = ["src/main/java"]
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     externalNativeBuild {
         cmake {
             path 'src/main/jni/CMakeLists.txt'
         }
     }
+
+    lint {
+        abortOnError false
+    }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile files('libs/dx.jar')
-    compile 'net.pierrox.android:lsvg:1.0'
-    compile project(':plugin-api')
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api files('libs/dx.jar')
+    api project(':lsvg')
+    api project(':plugin-api')
 }

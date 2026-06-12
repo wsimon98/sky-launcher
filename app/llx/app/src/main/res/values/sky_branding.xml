@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sky Launcher branding: overrides core's app_name at resource merge time -->
+<resources>
+    <string name="app_name" translatable="false">Sky Launcher</string>
+</resources>

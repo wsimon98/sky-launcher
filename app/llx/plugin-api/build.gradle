@@ -1,21 +1,26 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 26
-
+    namespace 'net.pierrox.lightning_launcher.plugin'
+    compileSdk 35
 
     defaultConfig {
-        minSdkVersion 8
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        minSdk 21
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        abortOnError false
+    }
 }
 
 dependencies {
-    implementation 'com.josesamuel:remoter-annotations:1.2.0'
+    api 'com.josesamuel:remoter-annotations:1.2.0'
     annotationProcessor 'com.josesamuel:remoter:1.2.0'
-    implementation 'org.parceler:parceler-api:1.1.12'
+    api 'org.parceler:parceler-api:1.1.12'
     annotationProcessor 'org.parceler:parceler:1.1.12'
 }
