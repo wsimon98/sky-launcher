@@ -231,7 +231,9 @@ public class SkyConfig {
      * convention; it stays changeable per desktop in the launcher settings.
      */
     public void ensureModernGestureDefaults(Context context, LightningEngine engine) {
-        File marker = new File(context.getFilesDir(), "sky_modern_defaults_applied_v2");
+        // v3: the old default template also bound swipeUp/swipe2Up to the user
+        // menu at the PAGE level, which shadows the global config entirely.
+        File marker = new File(context.getFilesDir(), "sky_modern_defaults_applied_v3");
         if (marker.exists() || engine == null) return;
         GlobalConfig gc = engine.getGlobalConfig();
         boolean changed = false;
@@ -250,12 +252,32 @@ public class SkyConfig {
         }
         try {
             Page home = engine.getOrLoadPage(gc.homeScreen);
-            if (home != null && home.config != null
-                    && home.config.scrollingDirection == PageConfig.ScrollingDirection.AUTO) {
-                home.config.scrollingDirection = PageConfig.ScrollingDirection.X;
-                home.setModified();
-                home.saveConfig();
-                home.notifyModified();
+            if (home != null && home.config != null) {
+                boolean pageChanged = false;
+                if (home.config.scrollingDirection == PageConfig.ScrollingDirection.AUTO) {
+                    home.config.scrollingDirection = PageConfig.ScrollingDirection.X;
+                    pageChanged = true;
+                }
+                // clear the stock template's page-level swipe bindings so the
+                // global ones (app drawer / Sky modules) can take effect; only
+                // the old USER_MENU defaults are touched, custom bindings stay
+                if (home.config.swipeUp != null
+                        && home.config.swipeUp.action == GlobalConfig.USER_MENU
+                        && home.config.swipeUp.next == null) {
+                    home.config.swipeUp = EventAction.UNSET();
+                    pageChanged = true;
+                }
+                if (home.config.swipe2Up != null
+                        && home.config.swipe2Up.action == GlobalConfig.USER_MENU
+                        && home.config.swipe2Up.next == null) {
+                    home.config.swipe2Up = EventAction.UNSET();
+                    pageChanged = true;
+                }
+                if (pageChanged) {
+                    home.setModified();
+                    home.saveConfig();
+                    home.notifyModified();
+                }
             }
         } catch (Exception e) {
             // never let the migration harm startup

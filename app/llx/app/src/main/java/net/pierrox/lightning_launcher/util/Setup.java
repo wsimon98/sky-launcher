@@ -265,17 +265,26 @@ public class Setup {
         dashboard_config.screenOrientation = PageConfig.ScreenOrientation.PORTRAIT;
         dashboard_config.gridPRowNum = 6;
         dashboard_config.menuKey = new EventAction(GlobalConfig.USER_MENU, null);
-        dashboard_config.swipeUp = new EventAction(GlobalConfig.USER_MENU, null);
-        dashboard_config.swipe2Up = new EventAction(GlobalConfig.USER_MENU, null);
+        // swipeUp/swipe2Up are left UNSET on purpose: page bindings shadow the
+        // global config, and the modern global defaults (app drawer on swipe
+        // up) plus Sky module bindings must reach the home desktop. The user
+        // menu stays available through the launcher menu (long tap).
         dashboard_config.bgTap = new EventAction(GlobalConfig.WALLPAPER_TAP, null);
+        // modern phones: home desktops pan horizontally; vertical swipes are
+        // gestures (see ItemLayout: vertical swipe events need !mAllowScrollY)
+        dashboard_config.scrollingDirection = PageConfig.ScrollingDirection.X;
         dashboard_config.statusBarColor = color_primary_dark;
         dashboard_config.navigationBarColor = Color.BLACK;
-        installDockShortcut(dashboard, drawer, 0, 5, CN_DOCK_0);
-        installDockShortcut(dashboard, drawer, 1, 5, CN_DOCK_1);
-        Item all_apps_item = installDockShortcut(dashboard, drawer, 2, 5, new String[]{new ComponentName(context, AppDrawerX.class).flattenToShortString()});
+        installDockShortcut(dashboard, drawer, 0, 5, CN_DOCK_0,
+                new Intent(Intent.ACTION_DIAL));
+        installDockShortcut(dashboard, drawer, 1, 5, CN_DOCK_1,
+                new Intent(android.provider.Settings.ACTION_SETTINGS));
+        Item all_apps_item = installDockShortcut(dashboard, drawer, 2, 5, new String[]{new ComponentName(context, AppDrawerX.class).flattenToShortString()}, null);
         all_apps_item.modifyItemConfig().launchAnimation = ItemConfig.LaunchAnimation.SLIDE_UP;
-        installDockShortcut(dashboard, drawer, 3, 5, CN_DOCK_3);
-        installDockShortcut(dashboard, drawer, 4, 5, CN_DOCK_4);
+        installDockShortcut(dashboard, drawer, 3, 5, CN_DOCK_3,
+                new Intent(Intent.ACTION_VIEW, Uri.parse("http://example.com")));
+        installDockShortcut(dashboard, drawer, 4, 5, CN_DOCK_4,
+                new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=android")));
 
 
         // create page indicator (dots)
@@ -514,8 +523,22 @@ public class Setup {
         return null;
     }
 
-    private static Item installDockShortcut(Page dashboard, Page app_drawer, int x, int y, String[] component_names) {
+    private static Item installDockShortcut(Page dashboard, Page app_drawer, int x, int y, String[] component_names, Intent fallbackIntent) {
         Item item = findItem(app_drawer.items, component_names);
+        if(item == null && fallbackIntent != null) {
+            // the historical component lists predate modern devices: ask the
+            // system which app handles the role and match it by package
+            try {
+                android.content.pm.ResolveInfo ri = LLApp.get().getPackageManager()
+                        .resolveActivity(fallbackIntent, PackageManager.MATCH_DEFAULT_ONLY);
+                if(ri != null && ri.activityInfo != null && !"android".equals(ri.activityInfo.packageName)) {
+                    item = findItemByPackageName(app_drawer.items,
+                            new String[]{ri.activityInfo.packageName + "/unused"}, true);
+                }
+            } catch(Exception e) {
+                // no match: simply skip this dock slot
+            }
+        }
         if(item != null) {
             Shortcut shortcut = Utils.copyShortcut(item, dashboard, x, y, 1);
 

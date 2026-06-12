@@ -897,7 +897,7 @@ public class Customize extends ResourceWrapperActivity implements
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mSystemConfig.hints |= SystemConfig.HINT_RATE;
-                            startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(Version.APP_STORE_INSTALL_PREFIX+getPackageName())), ""));
+                            startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(Version.PROJECT_PAGE)), ""));
                         }
                     });
             builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

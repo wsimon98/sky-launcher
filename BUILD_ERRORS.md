@@ -80,6 +80,38 @@ Remaining roadmap after v0.3.0: Tags & Profiles module, Theme Presets,
 script permission wrapper (plan Phase 4), sky-backup.zip format incl. module
 configs, targetSdk raise, LWP + plugin API re-wiring, F-Droid metadata.
 
+## 2026-06-12 — v0.3.1: old-Android audit pass
+
+CRITICAL FIX — the rest of the swipe-up bug:
+- The stock template ALSO binds swipeUp/swipe2Up -> USER_MENU at the PAGE
+  level (Setup.defaultSetup), and page bindings shadow the global config
+  (Screen.runActionForItemLayout resolves page -> root page -> global).
+  So even with v0.3.0's scroll fix, swipe up opened the user menu, and the
+  Modern Sky two-finger EdgeWheel binding was shadowed too. Migration v3
+  resets those two page bindings to UNSET when they still carry the stock
+  USER_MENU value (custom bindings untouched); the template no longer sets
+  them for fresh installs and creates the home desktop with horizontal-only
+  scrolling directly.
+
+Audit results (2018-era code on modern Android):
+- VERIFIED OK: runtime-permission infra (ResourceWrapperActivity), backup
+  storage permission prompts (targetSdk 28 keeps legacy external storage),
+  overlay service (canDrawOverlays + TYPE_APPLICATION_OVERLAY), WindowService
+  notification channel, display cutout shortEdges (values-v28), widget
+  binding (bindAppWidgetIdIfAllowed + ACTION_APPWIDGET_BIND), package
+  broadcasts (PACKAGE_ADDED/REMOVED are exempt manifest broadcasts), Gmail
+  unread-count hook fully try/catch-guarded (degrades to no counts).
+- FIXED: first-run dock used 2014 component lists (HTC/Sony-era dialers) —
+  now falls back to resolving the device's default dialer/settings/browser/
+  store via intent resolution and matching by package.
+- FIXED: "rate this app" nag + settings row pointed to a Play listing that
+  does not exist for app.skylauncher -> rate row hidden, dialog points to
+  the GitHub project page.
+- KNOWN/WATCHED: script engine dexes via dx.jar into app storage — fine at
+  targetSdk 28 (W^X is a warning, not an error); must be revisited when
+  targetSdk is raised. Old lightninglauncher.com wiki/community links kept
+  (classic docs), may rot.
+
 ## 2026-06-11 — RESULT: BUILD SUCCESSFUL
 
 Toolchain: Gradle 8.9 / AGP 8.7.3 / JDK 21 / NDK 28.2.13676358 / cmake 3.22.1

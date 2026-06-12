@@ -9,7 +9,10 @@ public class Version {
     public static String SCRIPT_IMPORTER_PKG = "com.trianguloy.llscript.repository";
 
     public static Uri LANGUAGE_PACK_INSTALL_URI=Uri.parse("market://search?q="+LLApp.LL_PKG_NAME+".lp.");
-	public static final boolean HAS_RATE_LINK=true;
+	// Sky Launcher is not on an app store: the rate flow points to the
+	// project page instead, and the settings row is hidden
+	public static final boolean HAS_RATE_LINK=false;
+	public static final String PROJECT_PAGE="https://github.com/wsimon98/sky-launcher";
 
     public static Uri BROWSE_TEMPLATES_URI=Uri.parse("market://search?q=lltemplate&c=apps");
     public static Uri BROWSE_SCRIPTS_URI=Uri.parse("http://directory.lightninglauncher.com/scripts/");
