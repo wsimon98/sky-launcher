@@ -135,6 +135,56 @@ public class SkyModulesActivity extends Activity {
         root.addView(iconPack);
         root.addView(note("Applies an installed ADW-format icon pack to the app drawer and home desktop."));
 
+        android.widget.Button headerColor = new android.widget.Button(this);
+        headerColor.setText("Settings header color…");
+        headerColor.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                net.margaritov.preference.colorpicker.ColorPickerDialog picker =
+                        new net.margaritov.preference.colorpicker.ColorPickerDialog(
+                                SkyModulesActivity.this, SkyTheme.headerColor(SkyModulesActivity.this));
+                picker.setOnColorChangedListener(
+                        new net.margaritov.preference.colorpicker.ColorPickerDialog.OnColorChangedListener() {
+                    @Override
+                    public void onColorChanged(int color) {
+                        // live preview while picking
+                        SkyTheme.applyHeaderColor(SkyModulesActivity.this, color | 0xFF000000);
+                    }
+
+                    @Override
+                    public void onColorDialogSelected(int color) {
+                        mConfig.settingsHeaderColor = color | 0xFF000000;
+                        mConfig.save();
+                        SkyTheme.applyHeader(SkyModulesActivity.this);
+                    }
+
+                    @Override
+                    public void onColorDialogCanceled() {
+                        // restore the previous color
+                        SkyTheme.applyHeader(SkyModulesActivity.this);
+                    }
+                });
+                picker.show();
+            }
+        });
+        root.addView(headerColor);
+
+        android.widget.Button headerAuto = new android.widget.Button(this);
+        headerAuto.setText("Header color: back to auto");
+        headerAuto.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                mConfig.settingsHeaderColor = 0;
+                mConfig.save();
+                SkyTheme.applyHeader(SkyModulesActivity.this);
+                Toast.makeText(SkyModulesActivity.this,
+                        "Following the system accent color again", Toast.LENGTH_SHORT).show();
+            }
+        });
+        root.addView(headerAuto);
+        root.addView(note("Colors the top bar of the settings screens and the app drawer. "
+                + "Auto follows the system accent (Android 12+)."));
+
         root.addView(note("\nGestures can be rebound under launcher settings > Events. "
                 + "Sky Launcher has no internet access: everything stays on this device."));
 

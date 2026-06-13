@@ -103,6 +103,7 @@ public class BackupRestore extends ResourceWrapperActivity implements View.OnCli
         Utils.setTheme(this, Utils.APP_THEME);
 
         super.onCreate(savedInstanceState);
+        net.pierrox.lightning_launcher.sky.SkyTheme.applyHeader(this);
         
         setContentView(R.layout.backup_restore);
 

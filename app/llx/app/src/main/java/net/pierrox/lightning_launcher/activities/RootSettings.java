@@ -80,6 +80,7 @@ public class RootSettings extends PreferenceActivity implements OnPreferenceClic
         Utils.setTheme(this, Utils.APP_THEME);
 
 		super.onCreate(savedInstanceState);
+        net.pierrox.lightning_launcher.sky.SkyTheme.applyHeader(this);
 		
 		addPreferencesFromResource(R.xml.preference_root);
 		

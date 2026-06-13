@@ -120,6 +120,7 @@ public class ScreenManager extends ResourceWrapperActivity implements OnClickLis
         Utils.setTheme(this, Utils.APP_THEME_NO_ACTION_BAR);
 
 		super.onCreate(savedInstanceState);
+        net.pierrox.lightning_launcher.sky.SkyTheme.applyHeader(this);
 
         mLightningEngine = LLApp.get().getAppEngine();
 

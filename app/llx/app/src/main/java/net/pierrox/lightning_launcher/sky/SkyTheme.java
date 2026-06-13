@@ -52,4 +52,37 @@ public final class SkyTheme {
     public static int accentWithAlpha(Context context, int alpha) {
         return (accent(context) & 0x00FFFFFF) | (alpha << 24);
     }
+
+    /** Header color for settings screens and the app drawer bar. */
+    public static int headerColor(Context context) {
+        int custom = SkyConfig.getInstance(context).settingsHeaderColor;
+        return custom != 0 ? custom : accent(context);
+    }
+
+    /**
+     * Recolor an activity's action bar (and status bar) with the header
+     * color. Replaces the hardcoded orange of the inherited theme.
+     */
+    public static void applyHeader(android.app.Activity activity) {
+        applyHeaderColor(activity, headerColor(activity));
+    }
+
+    public static void applyHeaderColor(android.app.Activity activity, int color) {
+        try {
+            android.app.ActionBar ab = activity.getActionBar();
+            if (ab != null) {
+                ab.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(color));
+            }
+            activity.getWindow().setStatusBarColor(darken(color));
+        } catch (Exception e) {
+            // cosmetic only: never break a settings screen over a color
+        }
+    }
+
+    private static int darken(int color) {
+        int r = (int) (((color >> 16) & 0xFF) * 0.8f);
+        int g = (int) (((color >> 8) & 0xFF) * 0.8f);
+        int b = (int) ((color & 0xFF) * 0.8f);
+        return (color & 0xFF000000) | (r << 16) | (g << 8) | b;
+    }
 }

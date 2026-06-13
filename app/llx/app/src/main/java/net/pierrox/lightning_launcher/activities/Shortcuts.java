@@ -63,6 +63,7 @@ public class Shortcuts extends ResourceWrapperListActivity {
         Utils.setTheme(this, mIsForTaskerScript ? Utils.APP_THEME_TRANSLUCENT : Utils.APP_THEME);
 
 		super.onCreate(savedInstanceState);
+        net.pierrox.lightning_launcher.sky.SkyTheme.applyHeader(this);
 
         if(mIsForTaskerScript) {
             pickScriptAndCreateShortcut();

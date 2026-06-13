@@ -200,6 +200,19 @@ on-device (create + run a small script in the Script Editor). If old LLX
 scripts run, a GitHub import path (TrianguloY's MIT script repository) is
 worth building.
 
+## 2026-06-12 — v0.6.1: customizable settings header color
+
+The settings screens and the app drawer bar carried Lightning's hardcoded
+orange (#FF5722, theme colorPrimary + ab_bg style). Now:
+- New "Settings header color…" picker in Sky Modules (classic LL color
+  picker dialog, live preview), plus "back to auto". Stored in
+  sky_config.json (settingsHeaderColor, 0 = auto).
+- Auto = Material You system accent on Android 12+, fox red elsewhere.
+- Applied at runtime (SkyTheme.applyHeader) to the action bar + status bar
+  of RootSettings, Customize, BackupRestore, ScreenManager,
+  EventActionSetup, Shortcuts, Sky Modules, and to the app drawer's custom
+  action bar (R.id.ab). The orange is gone by default.
+
 ## 2026-06-11 — RESULT: BUILD SUCCESSFUL
 
 Toolchain: Gradle 8.9 / AGP 8.7.3 / JDK 21 / NDK 28.2.13676358 / cmake 3.22.1

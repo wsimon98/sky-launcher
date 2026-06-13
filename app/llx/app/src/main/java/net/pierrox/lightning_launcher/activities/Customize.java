@@ -218,6 +218,7 @@ public class Customize extends ResourceWrapperActivity implements
         }
 
 		super.onCreate(savedInstanceState);
+        net.pierrox.lightning_launcher.sky.SkyTheme.applyHeader(this);
 
         if(Build.VERSION.SDK_INT>=19) {
             mSystemBarTintManager = new SystemBarTintManager(getWindow());

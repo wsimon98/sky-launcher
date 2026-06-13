@@ -815,6 +815,13 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
             content.addView(mSkyScrubber, lp);
         }
         mSkyScrubber.setVisibility(mode == Utils.LAYOUT_MODE_BY_NAME ? View.VISIBLE : View.GONE);
+
+        // the drawer's custom action bar follows the Sky header color instead
+        // of the inherited hardcoded orange
+        View skyAb = findViewById(R.id.ab);
+        if(skyAb != null) {
+            skyAb.setBackgroundColor(net.pierrox.lightning_launcher.sky.SkyTheme.headerColor(this));
+        }
     }
 
     private void skyJumpToLetter(char letter) {

@@ -96,6 +96,7 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
         Utils.setTheme(this, Utils.APP_THEME_NO_ACTION_BAR);
 
         super.onCreate(savedInstanceState);
+        net.pierrox.lightning_launcher.sky.SkyTheme.applyHeader(this);
 
         mAppEngine = LLApp.get().getAppEngine();
 

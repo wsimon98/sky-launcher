@@ -74,6 +74,9 @@ public class SkyConfig {
     /** Item id of the optional on-screen app drawer button, or -1 when absent. */
     public int appDrawerButtonItemId = -1;
 
+    /** Settings/app-drawer header color; 0 = auto (Material You or fox red). */
+    public int settingsHeaderColor = 0;
+
     public static synchronized SkyConfig getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new SkyConfig(context.getApplicationContext());
@@ -95,6 +98,7 @@ public class SkyConfig {
         if (o == null) return;
         mode = o.optString("mode", MODE_CLASSIC_LLX);
         appDrawerButtonItemId = o.optInt("appDrawerButtonItemId", -1);
+        settingsHeaderColor = o.optInt("settingsHeaderColor", 0);
         JSONObject m = o.optJSONObject("modules");
         if (m != null) {
             edgeWheel = m.optBoolean("edgeWheel", false);
@@ -121,6 +125,7 @@ public class SkyConfig {
             o.put("mode", mode);
             o.put("modules", m);
             o.put("appDrawerButtonItemId", appDrawerButtonItemId);
+            o.put("settingsHeaderColor", settingsHeaderColor);
             FileUtils.saveStringToFile(o.toString(2), mFile);
         } catch (JSONException | java.io.IOException e) {
             // pass
