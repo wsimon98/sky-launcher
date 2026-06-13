@@ -175,6 +175,9 @@
             android:label="@string/customize_ll"
     	    android:theme="@style/AppLightTranslucent" />
 
+		<!-- The Script Editor is reachable from settings and the install
+		     shortcut; it is not a standalone launcher icon (avoids a stray
+		     Lightning-branded entry in the app drawer). -->
 		<activity
             android:name="net.pierrox.lightning_launcher.activities.ScriptEditor"
             android:label="@string/sc_editor"
@@ -182,13 +185,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="user"
             android:finishOnCloseSystemDialogs="true"
-            android:windowSoftInputMode="adjustResize|stateHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
 
 		<activity
             android:name="net.pierrox.lightning_launcher.activities.StyleChooser"

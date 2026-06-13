@@ -349,7 +349,6 @@ public class Setup {
         installShortcut(dashboard, -5, 0, "N", resources.getString(R.string.mi_es_settings), null, new Intent(context, RootSettings.class));
         installShortcut(dashboard, -4, 0, "x", resources.getString(R.string.ds_br), null, new Intent(context, BackupRestore.class));
         installShortcut(dashboard, 9, 0, "z", resources.getString(R.string.sc_editor), null, new Intent(context, ScriptEditor.class));
-        installShortcut(dashboard, 8, 0, "P", resources.getString(R.string.um_t), Version.BROWSE_TEMPLATES_URI.toString(), null);
 
         Intent intent = new Intent(context, Dashboard.class);
         intent.putExtra(LightningIntent.INTENT_EXTRA_ACTION, GlobalConfig.SWITCH_FULL_SCALE_OR_ORIGIN);

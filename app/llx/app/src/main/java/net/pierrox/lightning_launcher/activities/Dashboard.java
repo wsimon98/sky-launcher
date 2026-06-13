@@ -2434,7 +2434,8 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     protected boolean showPluginsInAddItemDialog() {
-        return true;
+        // Sky Launcher does not surface the third-party plugin system
+        return false;
     }
 
     @Override

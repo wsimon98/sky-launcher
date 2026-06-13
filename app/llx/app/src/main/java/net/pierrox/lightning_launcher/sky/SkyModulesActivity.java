@@ -121,10 +121,17 @@ public class SkyModulesActivity extends Activity {
             }
         });
 
-        root.addView(note("\nColors, wallpaper and icon styles are under "
-                + "Settings > Colors & Wallpaper. Gestures can be rebound under "
-                + "launcher settings > Events. Sky Launcher has no internet "
-                + "access: everything stays on this device."));
+        root.addView(header("How to open them"));
+        root.addView(note(
+                "• EdgeWheel — two-finger swipe up on the home screen\n"
+                + "• Command Palette — two-finger swipe down\n"
+                + "• GlobalSearch — double-tap the home screen\n"
+                + "• File-System Folders — :tree in the palette, or bind a gesture\n\n"
+                + "Any of these can be rebound to a different gesture, button or "
+                + "item under launcher settings > Events (pick the \"Sky\" actions). "
+                + "Colors, wallpaper and icon styles are under Settings > Colors & "
+                + "Wallpaper. Sky Launcher has no internet access: everything "
+                + "stays on this device."));
 
         setContentView(scroll, new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));

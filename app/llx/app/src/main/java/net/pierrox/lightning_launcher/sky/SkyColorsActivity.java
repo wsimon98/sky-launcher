@@ -37,7 +37,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import net.margaritov.preference.colorpicker.ColorPickerDialog;
 import net.pierrox.lightning_launcher.LLApp;
 import net.pierrox.lightning_launcher.data.IconPack;
 import net.pierrox.lightning_launcher.data.Item;
@@ -175,21 +174,14 @@ public class SkyColorsActivity extends Activity {
     }
 
     private void pickHeaderColor() {
-        ColorPickerDialog picker = new ColorPickerDialog(this, SkyTheme.headerColor(this));
-        picker.setOnColorChangedListener(new ColorPickerDialog.OnColorChangedListener() {
-            @Override public void onColorChanged(int color) {
-                SkyTheme.applyHeaderColor(SkyColorsActivity.this, color | 0xFF000000);
-            }
-            @Override public void onColorDialogSelected(int color) {
+        SkyColorPicker.show(this, SkyTheme.headerColor(this), new SkyColorPicker.OnPicked() {
+            @Override public void onPicked(int color) {
                 mConfig.settingsHeaderColor = color | 0xFF000000;
                 mConfig.save();
                 SkyTheme.applyHeader(SkyColorsActivity.this);
-            }
-            @Override public void onColorDialogCanceled() {
-                SkyTheme.applyHeader(SkyColorsActivity.this);
+                Toast.makeText(SkyColorsActivity.this, "Header color set", Toast.LENGTH_SHORT).show();
             }
         });
-        picker.show();
     }
 
     private void pickBarColor(final boolean statusBar) {
@@ -205,16 +197,11 @@ public class SkyColorsActivity extends Activity {
         } catch (Exception e) {
             current = 0xFF000000;
         }
-        ColorPickerDialog picker = new ColorPickerDialog(this, current);
-        picker.setAlphaSliderVisible(true);
-        picker.setOnColorChangedListener(new ColorPickerDialog.OnColorChangedListener() {
-            @Override public void onColorChanged(int color) {}
-            @Override public void onColorDialogSelected(int color) {
+        SkyColorPicker.show(this, current, new SkyColorPicker.OnPicked() {
+            @Override public void onPicked(int color) {
                 applyBarColor(engine, statusBar, color);
             }
-            @Override public void onColorDialogCanceled() {}
         });
-        picker.show();
     }
 
     private void applyBarColor(LightningEngine engine, boolean statusBar, int color) {

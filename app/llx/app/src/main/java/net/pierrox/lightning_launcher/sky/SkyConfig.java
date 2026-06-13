@@ -214,19 +214,8 @@ public class SkyConfig {
         GlobalConfig gc = engine.getGlobalConfig();
         boolean changed = false;
 
-        if (MODE_MODERN_SKY.equals(mode)) {
-            if (edgeWheel && isUntouched(gc.swipe2Up, GlobalConfig.NOTHING)) {
-                gc.swipe2Up = new EventAction(GlobalConfig.SKY_EDGE_WHEEL, null);
-                changed = true;
-            }
-            if (commandPalette && isUntouched(gc.swipe2Down, GlobalConfig.NOTHING)) {
-                gc.swipe2Down = new EventAction(GlobalConfig.SKY_COMMAND_PALETTE, null);
-                changed = true;
-            }
-            if (globalSearch && isUntouched(gc.bgDoubleTap, GlobalConfig.SWITCH_FULL_SCALE_OR_ORIGIN)) {
-                gc.bgDoubleTap = new EventAction(GlobalConfig.SKY_GLOBAL_SEARCH, null);
-                changed = true;
-            }
+        if (MODE_MODERN_SKY.equals(mode) || MODE_CUSTOM.equals(mode)) {
+            changed = bindEnabledModuleGestures(gc);
         } else if (MODE_CLASSIC_LLX.equals(mode) || MODE_MINIMAL.equals(mode)) {
             if (isSkyAction(gc.swipe2Up.action)) {
                 gc.swipe2Up = EventAction.NOTHING();
@@ -248,6 +237,28 @@ public class SkyConfig {
     }
 
     /**
+     * Bind each enabled module's default gesture, only filling a slot that
+     * still carries its stock default. Two-finger swipe up = EdgeWheel,
+     * two-finger swipe down = Command Palette, double-tap = GlobalSearch.
+     */
+    private boolean bindEnabledModuleGestures(GlobalConfig gc) {
+        boolean changed = false;
+        if (edgeWheel && isUntouched(gc.swipe2Up, GlobalConfig.NOTHING)) {
+            gc.swipe2Up = new EventAction(GlobalConfig.SKY_EDGE_WHEEL, null);
+            changed = true;
+        }
+        if (commandPalette && isUntouched(gc.swipe2Down, GlobalConfig.NOTHING)) {
+            gc.swipe2Down = new EventAction(GlobalConfig.SKY_COMMAND_PALETTE, null);
+            changed = true;
+        }
+        if (globalSearch && isUntouched(gc.bgDoubleTap, GlobalConfig.SWITCH_FULL_SCALE_OR_ORIGIN)) {
+            gc.bgDoubleTap = new EventAction(GlobalConfig.SKY_GLOBAL_SEARCH, null);
+            changed = true;
+        }
+        return changed;
+    }
+
+    /**
      * One-time upgrade for layouts created before the modern gesture defaults:
      * if swipe up / swipe down still carry the old empty defaults, bind the
      * app drawer and the notification shade. Never touches customized bindings.
@@ -262,7 +273,9 @@ public class SkyConfig {
         // v3: the old default template also bound swipeUp/swipe2Up to the user
         // menu at the PAGE level, which shadows the global config entirely.
         // v4: app drawer pull-past-edge events default to closing the drawer.
-        File marker = new File(context.getFilesDir(), "sky_modern_defaults_applied_v4");
+        // v5: ensure enabled module gestures are bound on upgraded installs
+        //     (first-run-only binding meant upgraders never got them).
+        File marker = new File(context.getFilesDir(), "sky_modern_defaults_applied_v5");
         if (marker.exists() || engine == null) return;
         GlobalConfig gc = engine.getGlobalConfig();
         boolean changed = false;
@@ -274,6 +287,9 @@ public class SkyConfig {
         if (isUntouched(gc.swipeDown, GlobalConfig.NOTHING)
                 && gc.swipeDown.action != GlobalConfig.SHOW_NOTIFICATIONS) {
             gc.swipeDown = new EventAction(GlobalConfig.SHOW_NOTIFICATIONS, null);
+            changed = true;
+        }
+        if (bindEnabledModuleGestures(gc)) {
             changed = true;
         }
         if (changed) {
