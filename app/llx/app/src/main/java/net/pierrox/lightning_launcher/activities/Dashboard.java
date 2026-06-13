@@ -567,13 +567,8 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     } catch (PackageManager.NameNotFoundException e) {
                     }
 
-                    Intent email_intent = new Intent(android.content.Intent.ACTION_SEND, Uri.parse("mailto:"));
-                    email_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    email_intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"pierre@lightninglauncher.com"});
-                    email_intent.putExtra(Intent.EXTRA_SUBJECT, "Lightning Launcher bug report - " + version);
-                    email_intent.putExtra(Intent.EXTRA_TEXT, dump);
-                    email_intent.setType("message/rfc822");
-                    startActivity(Intent.createChooser(email_intent, "Lightning Launcher bug report"));
+                    // crash logs stay local — never auto-email anyone
+                    android.util.Log.e("SkyLauncher", "Crash (" + version + "): " + dump);
 
                     PhoneUtils.selectLauncher(Dashboard.this, false);
 

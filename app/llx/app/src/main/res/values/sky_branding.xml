@@ -9,6 +9,8 @@
     <string name="an_sky_gs">GlobalSearch</string>
     <string name="an_sky_ff">File-System Folders</string>
     <string name="sky_modules">Sky Modules</string>
+    <string name="sky_colors">Colors &amp; Wallpaper</string>
+    <string name="sky_colors_s">Wallpaper, header color, icon style and icon packs</string>
 
     <!-- De-branding: user-facing "Lightning"/"LL" strings from core are
          overridden here at resource merge time. Strings about importing

@@ -234,6 +234,7 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
         btn.setTypeface(typeface);
 
         mActionBar = (ViewAnimator) findViewById(R.id.ab);
+        mActionBar.setBackgroundColor(net.pierrox.lightning_launcher.sky.SkyTheme.headerColor(this));
 
         loadState();
 
@@ -897,10 +898,24 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
         if(allPageIds != null) {
             allPageIds.add(page.id);
         }
+        net.pierrox.lightning_launcher.sky.SkyConfig skyConfig =
+                net.pierrox.lightning_launcher.sky.SkyConfig.getInstance(this);
+        net.pierrox.lightning_launcher.sky.tags.SkyTags skyTags =
+                skyConfig.tags ? new net.pierrox.lightning_launcher.sky.tags.SkyTags(this) : null;
         for(Item i : page.items) {
             if(i.getClass()==Folder.class) {
                 addAppsFromPage(((Folder)i).getOrLoadFolderPage(), items, allPageIds);
             } else {
+                // Tags module: apps tagged "hidden" are dropped from the
+                // dynamic (by-name etc.) drawer layouts; the custom layout is
+                // left untouched
+                if(skyTags != null && i instanceof Shortcut) {
+                    Intent intent = ((Shortcut) i).getIntent();
+                    ComponentName cn = intent == null ? null : intent.getComponent();
+                    if(cn != null && skyTags.hasTag(cn.flattenToShortString(), "hidden")) {
+                        continue;
+                    }
+                }
                 items.add(i);
             }
         }
@@ -1682,6 +1697,7 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
     }
 
     private void showCustomActionBar(boolean hide_later) {
+        mActionBar.setBackgroundColor(net.pierrox.lightning_launcher.sky.SkyTheme.headerColor(this));
         if (mActionBar.getVisibility() != View.VISIBLE) {
             mActionBar.setVisibility(View.VISIBLE);
             TranslateAnimation ta = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, -1, Animation.RELATIVE_TO_SELF, 0);

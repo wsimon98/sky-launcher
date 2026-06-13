@@ -533,18 +533,11 @@ public class BackupRestore extends ResourceWrapperActivity implements View.OnCli
             removeDialog(DIALOG_BACKUP_IN_PROGRESS);
 
             if(result != null) {
+                // log locally only — never auto-email anyone
                 Writer out = new StringWriter(1000);
-
                 PrintWriter printWriter = new PrintWriter(out);
                 result.printStackTrace(printWriter);
-
-                Intent email_intent=new Intent(android.content.Intent.ACTION_SEND, Uri.parse("mailto:"));
-                email_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                email_intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"pierrox@pierrox.net"});
-                email_intent.putExtra(Intent.EXTRA_SUBJECT, "Backup error");
-                email_intent.putExtra(Intent.EXTRA_TEXT, out.toString());
-                email_intent.setType("message/rfc822");
-                startActivity(Intent.createChooser(email_intent, "Backup error, please send a bug report by email"));
+                android.util.Log.e("SkyLauncher", "Backup error: " + out);
             }
             String msg=(result==null ? getString(R.string.backup_done, mBackupFilePath) : getString(R.string.backup_error));
             Toast.makeText(BackupRestore.this, msg, Toast.LENGTH_LONG).show();

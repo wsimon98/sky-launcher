@@ -94,6 +94,10 @@ public final class SkyProviders {
         public List<SearchResult> search(String query, int max) {
             ArrayList<SearchResult> out = new ArrayList<>();
             final PackageManager pm = mCtx.activity.getPackageManager();
+            net.pierrox.lightning_launcher.sky.SkyConfig skyConfig =
+                    net.pierrox.lightning_launcher.sky.SkyConfig.getInstance(mCtx.activity);
+            net.pierrox.lightning_launcher.sky.tags.SkyTags skyTags =
+                    skyConfig.tags ? new net.pierrox.lightning_launcher.sky.tags.SkyTags(mCtx.activity) : null;
             Intent main = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);
             for (ResolveInfo ri : pm.queryIntentActivities(main, 0)) {
                 if (ri.activityInfo == null) continue;
@@ -101,6 +105,7 @@ public final class SkyProviders {
                 if (!matches(label, query)) continue;
                 final ComponentName cn =
                         new ComponentName(ri.activityInfo.packageName, ri.activityInfo.name);
+                if (skyTags != null && skyTags.hasTag(cn.flattenToShortString(), "hidden")) continue;
                 out.add(new SearchResult(label, "App", new Runnable() {
                     @Override
                     public void run() {

@@ -58,6 +58,8 @@ public class RootSettings extends PreferenceActivity implements OnPreferenceClic
 	private static final String KEY_RATE="r";
 	private static final String KEY_SELECT_LAUNCHER ="s";
     private static final String KEY_CONFIGURE_PAGES="p";
+    private static final String KEY_COLORS_WALLPAPER="cw";
+    private static final String KEY_SKY_MODULES="sky";
     private static final String KEY_CAT_TEMPLATES="tc";
     private static final String KEY_TEMPLATES_BROWSE="tb";
     private static final String KEY_TEMPLATES_APPLY="ta";
@@ -91,6 +93,8 @@ public class RootSettings extends PreferenceActivity implements OnPreferenceClic
 
         final LLApp app = LLApp.get();
         setupPreference(KEY_CONFIGURE_PAGES, R.string.configure_pages_t, app.isFreeVersion() ? R.string.tr_br_s : R.string.configure_pages_s);
+        setupPreference(KEY_COLORS_WALLPAPER, R.string.sky_colors, R.string.sky_colors_s);
+        setupPreference(KEY_SKY_MODULES, R.string.sky_modules, 0);
 		setupPreference(KEY_BACKUP_RESTORE, R.string.backup_restore_t, app.isTrialVersion() ? R.string.tr_br_s : 0);
 
 		setupPreference(KEY_CAT_INFOS, R.string.app_name, 0);
@@ -156,6 +160,10 @@ public class RootSettings extends PreferenceActivity implements OnPreferenceClic
             startActivity(intent);
 		} else if(KEY_BACKUP_RESTORE.equals(key)) {
 			startActivity(new Intent(this, BackupRestore.class));
+		} else if(KEY_COLORS_WALLPAPER.equals(key)) {
+			startActivity(new Intent(this, net.pierrox.lightning_launcher.sky.SkyColorsActivity.class));
+		} else if(KEY_SKY_MODULES.equals(key)) {
+			startActivity(new Intent(this, net.pierrox.lightning_launcher.sky.SkyModulesActivity.class));
 		} else if(KEY_SELECT_LAUNCHER.equals(key)) {
 			PhoneUtils.selectLauncher(this, true);
         } else if(KEY_UPGRADE.equals(key)) {

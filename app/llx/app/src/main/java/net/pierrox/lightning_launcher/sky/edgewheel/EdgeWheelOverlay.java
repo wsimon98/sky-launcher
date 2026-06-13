@@ -112,6 +112,32 @@ public class EdgeWheelOverlay {
 
     private List<WheelEntry> loadEntries() {
         PackageManager pm = mSkyContext.activity.getPackageManager();
+        net.pierrox.lightning_launcher.sky.SkyConfig cfg =
+                net.pierrox.lightning_launcher.sky.SkyConfig.getInstance(mSkyContext.activity);
+        int slots = Math.max(4, Math.min(12, cfg.edgeWheelSlots));
+
+        // chosen favorites, in order, if any
+        if (!cfg.edgeWheelApps.isEmpty()) {
+            ArrayList<WheelEntry> chosen = new ArrayList<>();
+            for (String comp : cfg.edgeWheelApps) {
+                ComponentName cn = ComponentName.unflattenFromString(comp);
+                if (cn == null) continue;
+                try {
+                    android.content.pm.ActivityInfo ai = pm.getActivityInfo(cn, 0);
+                    WheelEntry e = new WheelEntry();
+                    e.label = ai.loadLabel(pm);
+                    e.icon = ai.loadIcon(pm);
+                    e.component = cn;
+                    chosen.add(e);
+                } catch (Exception ignored) {
+                    // app uninstalled: skip
+                }
+                if (chosen.size() >= slots) break;
+            }
+            if (!chosen.isEmpty()) return chosen;
+        }
+
+        // otherwise the first apps alphabetically
         Intent main = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);
         List<ResolveInfo> infos = pm.queryIntentActivities(main, 0);
         final Collator collator = Collator.getInstance();
@@ -131,7 +157,7 @@ public class EdgeWheelOverlay {
                 return collator.compare(String.valueOf(a.label), String.valueOf(b.label));
             }
         });
-        return entries.size() > SLOTS ? entries.subList(0, SLOTS) : entries;
+        return entries.size() > slots ? entries.subList(0, slots) : entries;
     }
 
     private View makeSlotView(final WheelEntry entry) {

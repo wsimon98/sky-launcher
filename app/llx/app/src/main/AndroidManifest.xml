@@ -377,6 +377,13 @@
             </intent-filter>
         </activity>
 
+        <!-- Colors & wallpaper settings -->
+        <activity
+            android:name="net.pierrox.lightning_launcher.sky.SkyColorsActivity"
+            android:label="@string/sky_colors"
+            android:excludeFromRecents="true"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+
 	</application>
 
 </manifest>

@@ -68,6 +68,7 @@ public class GlobalSearchDialog {
         final EditText input = new EditText(ctx.activity);
         input.setHint("Search apps, items, scripts…");
         input.setSingleLine(true);
+        input.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_GO);
         root.addView(input, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -120,6 +121,20 @@ public class GlobalSearchDialog {
                 SearchResult r = results.get(position);
                 dialog.dismiss();
                 r.open.run();
+            }
+        });
+
+        // pressing Go/Enter launches the top result
+        input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, android.view.KeyEvent event) {
+                if (!results.isEmpty()) {
+                    SearchResult r = results.get(0);
+                    dialog.dismiss();
+                    r.open.run();
+                    return true;
+                }
+                return false;
             }
         });
 

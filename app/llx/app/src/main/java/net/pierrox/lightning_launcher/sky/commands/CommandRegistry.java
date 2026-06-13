@@ -68,6 +68,8 @@ public class CommandRegistry {
             new BuiltIn(":restore", "Open backup & restore", false),
             new BuiltIn(":restart", "Restart the launcher", false),
             new BuiltIn(":settings", "Open launcher settings", false),
+            new BuiltIn(":colors", "Open Colors & Wallpaper", false),
+            new BuiltIn(":wallpaper", "Choose a wallpaper", false),
             new BuiltIn(":desktop", "Choose a desktop to go to", false),
             new BuiltIn(":search", "Open GlobalSearch (when enabled)", false),
             new BuiltIn(":tree", "Open File-System Folders (when enabled)", false),
@@ -136,6 +138,18 @@ public class CommandRegistry {
                 return CommandResult.ok();
             case ":settings":
                 mCtx.runAction(GlobalConfig.CUSTOMIZE_LAUNCHER, null);
+                return CommandResult.ok();
+            case ":colors":
+                mCtx.activity.startActivity(new Intent(mCtx.activity,
+                        net.pierrox.lightning_launcher.sky.SkyColorsActivity.class));
+                return CommandResult.ok();
+            case ":wallpaper":
+                try {
+                    mCtx.activity.startActivity(Intent.createChooser(
+                            new Intent(Intent.ACTION_SET_WALLPAPER), "Set wallpaper"));
+                } catch (Exception e) {
+                    return CommandResult.error("No wallpaper picker found");
+                }
                 return CommandResult.ok();
             case ":desktop":
                 mCtx.runAction(GlobalConfig.SELECT_DESKTOP_TO_GO_TO, null);

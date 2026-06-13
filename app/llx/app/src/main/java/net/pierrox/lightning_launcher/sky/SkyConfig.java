@@ -33,6 +33,7 @@ import net.pierrox.lightning_launcher.data.FileUtils;
 import net.pierrox.lightning_launcher.data.Page;
 import net.pierrox.lightning_launcher.engine.LightningEngine;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -77,6 +78,14 @@ public class SkyConfig {
     /** Settings/app-drawer header color; 0 = auto (Material You or fox red). */
     public int settingsHeaderColor = 0;
 
+    /** Built-in icon style (see SkyIcons.STYLE_*). */
+    public int iconStyle = 0;
+
+    /** EdgeWheel: chosen favorite app components (empty = alphabetical auto). */
+    public final java.util.ArrayList<String> edgeWheelApps = new java.util.ArrayList<>();
+    /** EdgeWheel: number of slots shown (4-12). */
+    public int edgeWheelSlots = 8;
+
     public static synchronized SkyConfig getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new SkyConfig(context.getApplicationContext());
@@ -99,6 +108,16 @@ public class SkyConfig {
         mode = o.optString("mode", MODE_CLASSIC_LLX);
         appDrawerButtonItemId = o.optInt("appDrawerButtonItemId", -1);
         settingsHeaderColor = o.optInt("settingsHeaderColor", 0);
+        iconStyle = o.optInt("iconStyle", 0);
+        edgeWheelSlots = o.optInt("edgeWheelSlots", 8);
+        edgeWheelApps.clear();
+        JSONArray ewa = o.optJSONArray("edgeWheelApps");
+        if (ewa != null) {
+            for (int i = 0; i < ewa.length(); i++) {
+                String c = ewa.optString(i, "").trim();
+                if (!c.isEmpty()) edgeWheelApps.add(c);
+            }
+        }
         JSONObject m = o.optJSONObject("modules");
         if (m != null) {
             edgeWheel = m.optBoolean("edgeWheel", false);
@@ -126,6 +145,9 @@ public class SkyConfig {
             o.put("modules", m);
             o.put("appDrawerButtonItemId", appDrawerButtonItemId);
             o.put("settingsHeaderColor", settingsHeaderColor);
+            o.put("iconStyle", iconStyle);
+            o.put("edgeWheelSlots", edgeWheelSlots);
+            o.put("edgeWheelApps", new JSONArray(edgeWheelApps));
             FileUtils.saveStringToFile(o.toString(2), mFile);
         } catch (JSONException | java.io.IOException e) {
             // pass
