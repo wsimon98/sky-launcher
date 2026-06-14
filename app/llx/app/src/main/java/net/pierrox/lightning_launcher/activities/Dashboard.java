@@ -7256,12 +7256,14 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
                 // Sky optional modules: these actions only do something while
                 // their module is enabled, so leftover bindings are harmless
-                case GlobalConfig.SKY_EDGE_WHEEL:
-                    if(net.pierrox.lightning_launcher.sky.SkyConfig.getInstance(mContext).edgeWheel) {
-                        net.pierrox.lightning_launcher.sky.edgewheel.EdgeWheelOverlay.show(
-                                new net.pierrox.lightning_launcher.sky.SkyContext(Dashboard.this, this, engine));
-                    }
-                    break;
+                // EdgeWheel retired — dispatch kept dormant (the action is no
+                // longer bindable or surfaced; EdgeWheelOverlay is still on disk).
+                // case GlobalConfig.SKY_EDGE_WHEEL:
+                //     if(net.pierrox.lightning_launcher.sky.SkyConfig.getInstance(mContext).edgeWheel) {
+                //         net.pierrox.lightning_launcher.sky.edgewheel.EdgeWheelOverlay.show(
+                //                 new net.pierrox.lightning_launcher.sky.SkyContext(Dashboard.this, this, engine));
+                //     }
+                //     break;
 
                 case GlobalConfig.SKY_COMMAND_PALETTE:
                     if(net.pierrox.lightning_launcher.sky.SkyConfig.getInstance(mContext).commandPalette) {

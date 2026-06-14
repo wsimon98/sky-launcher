@@ -403,11 +403,11 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
         }
 
         if(mActionBarBackground == null) {
-            int bg_res_id;
-            if(Build.VERSION.SDK_INT>=21) bg_res_id = R.color.color_primary;
-            else if(Build.VERSION.SDK_INT>=13) bg_res_id = R.drawable.ab_bg_v13;
-            else bg_res_id = R.drawable.ab_bg_v9;
-            mActionBarBackground = getResources().getDrawable(bg_res_id);
+            // Sky: with no user-set drawer bar image, track the Colors &
+            // Wallpaper header color so the drawer bar matches every other Sky
+            // bar/header instead of the stock LLX primary color.
+            mActionBarBackground = new android.graphics.drawable.ColorDrawable(
+                    net.pierrox.lightning_launcher.sky.SkyTheme.headerColor(this));
         }
 
         if(mActionBarBackground instanceof SharedAsyncGraphicsDrawable) {

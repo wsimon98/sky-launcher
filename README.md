@@ -6,10 +6,9 @@ modernized for today's devices with optional modern modules.
 Sky Launcher keeps the unique Lightning Launcher / LLX experience — free item
 placement, multiple desktops, panels, folders, widgets, gestures and a full
 scripting engine — alive on modern Android, and adds modern conveniences on
-top: a radial app wheel (EdgeWheel), a typed command palette, local search,
-file-tree folders, app tags, an app-drawer alphabet scrubber, built-in icon
-styles, and Material You theming. Everything modern is optional and can be
-toggled per feature.
+top: a typed command palette, local search, file-tree folders, app tags, an
+app-drawer alphabet scrubber, built-in icon styles, and Material You theming.
+Everything modern is optional and can be toggled per feature.
 
 ## Features
 
@@ -18,7 +17,6 @@ toggled per feature.
 - **Modern gestures** — swipe up for the app drawer, swipe down for
   notifications, two-finger swipes and double-tap for optional tools, plus
   pull-past-edge gestures in the app drawer.
-- **EdgeWheel** — radial quick launcher with a chosen set of favorite apps.
 - **Command Palette** — typed commands like `:edit`, `:backup`, `.app maps`.
 - **GlobalSearch** — fast local search across apps, shortcuts, folders,
   panels, scripts and tags. No internet.
@@ -59,7 +57,6 @@ Bundled within the Lightning Launcher source tree (under their own licenses):
 Several optional modules were built from scratch, inspired by the behavior of
 other open-source launchers (no code copied):
 
-- EdgeWheel — inspired by [Pie Launcher](https://github.com/markusfisch/PieLauncher)
 - Command Palette — inspired by [T-UI Console Launcher](https://github.com/fandreuz/TUI-ConsoleLauncher)
 - File-System Folders — inspired by [SimpleFolderLauncher](https://github.com/Robby-Blue/SimpleFolderLauncher)
 - GlobalSearch — inspired by [Kvaesitso](https://github.com/MM2-0/Kvaesitso)

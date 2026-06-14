@@ -71,6 +71,7 @@ public class CommandRegistry {
             new BuiltIn(":colors", "Open Colors & Wallpaper", false),
             new BuiltIn(":wallpaper", "Choose a wallpaper", false),
             new BuiltIn(":desktop", "Choose a desktop to go to", false),
+            // EdgeWheel retired — :wheel no longer offered (dormant).
             new BuiltIn(":search", "Open GlobalSearch (when enabled)", false),
             new BuiltIn(":tree", "Open File-System Folders (when enabled)", false),
             new BuiltIn(":tags", "Manage app tags (when enabled)", false),
@@ -154,6 +155,13 @@ public class CommandRegistry {
             case ":desktop":
                 mCtx.runAction(GlobalConfig.SELECT_DESKTOP_TO_GO_TO, null);
                 return CommandResult.ok();
+            // EdgeWheel retired — :wheel handler kept dormant:
+            // case ":wheel":
+            //     if (net.pierrox.lightning_launcher.sky.SkyConfig.getInstance(mCtx.activity).edgeWheel) {
+            //         mCtx.runAction(GlobalConfig.SKY_EDGE_WHEEL, null);
+            //         return CommandResult.ok();
+            //     }
+            //     return CommandResult.error("Enable EdgeWheel in Sky Modules first");
             case ":search":
                 mCtx.runAction(GlobalConfig.SKY_GLOBAL_SEARCH, null);
                 return CommandResult.ok();

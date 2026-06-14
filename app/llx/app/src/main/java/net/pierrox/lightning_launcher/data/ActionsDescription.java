@@ -100,7 +100,8 @@ public final class ActionsDescription {
             new Action(GlobalConfig.RUN_SCRIPT, R.string.an_rs, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER | Action.FLAG_TYPE_SCRIPT, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.SET_VARIABLE, R.string.an_sv, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             // Sky optional module actions: only listed while their module is enabled
-            new Action(GlobalConfig.SKY_EDGE_WHEEL, R.string.an_sky_ew, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
+            // EdgeWheel retired — no longer offered as a bindable action (dormant):
+            // new Action(GlobalConfig.SKY_EDGE_WHEEL, R.string.an_sky_ew, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.SKY_COMMAND_PALETTE, R.string.an_sky_cp, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.SKY_GLOBAL_SEARCH, R.string.an_sky_gs, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.SKY_FS_FOLDERS, R.string.an_sky_ff, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),

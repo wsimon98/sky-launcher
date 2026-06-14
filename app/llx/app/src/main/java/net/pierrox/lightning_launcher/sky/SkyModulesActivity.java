@@ -57,7 +57,8 @@ import net.pierrox.lightning_launcher_extreme.R;
 public class SkyModulesActivity extends Activity {
 
     private SkyConfig mConfig;
-    private CheckBox mCheckEdgeWheel, mCheckPalette, mCheckSearch, mCheckFsFolders, mCheckTags, mCheckDrawerButton;
+    // mCheckEdgeWheel retired (dormant) — EdgeWheel no longer shown in Sky Modules.
+    private CheckBox mCheckPalette, mCheckSearch, mCheckFsFolders, mCheckTags, mCheckDrawerButton;
     private boolean mUpdating;
 
     @Override
@@ -75,15 +76,8 @@ public class SkyModulesActivity extends Activity {
 
         root.addView(header("Modules"));
 
-        mCheckEdgeWheel = check(root, "EdgeWheel",
-                "Radial quick launcher (two-finger swipe up when bound)", "edgeWheel");
-        android.widget.Button edgeApps = new android.widget.Button(this);
-        edgeApps.setText("Choose EdgeWheel apps…");
-        edgeApps.setAllCaps(false);
-        edgeApps.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override public void onClick(android.view.View v) { pickEdgeWheelApps(); }
-        });
-        root.addView(edgeApps);
+        // EdgeWheel retired — its checkbox and "Choose EdgeWheel apps…" picker
+        // are no longer shown (pickEdgeWheelApps() remains on disk, dormant).
         mCheckPalette = check(root, "Command Palette",
                 "Typed commands like :edit or .app (two-finger swipe down when bound)", "commandPalette");
         mCheckSearch = check(root, "GlobalSearch",
@@ -123,8 +117,7 @@ public class SkyModulesActivity extends Activity {
 
         root.addView(header("How to open them"));
         root.addView(note(
-                "• EdgeWheel — two-finger swipe up on the home screen\n"
-                + "• Command Palette — two-finger swipe down\n"
+                "• Command Palette — two-finger swipe down\n"
                 + "• GlobalSearch — double-tap the home screen\n"
                 + "• File-System Folders — :tree in the palette, or bind a gesture\n\n"
                 + "Any of these can be rebound to a different gesture, button or "
@@ -239,7 +232,7 @@ public class SkyModulesActivity extends Activity {
 
     private void refresh() {
         mUpdating = true;
-        mCheckEdgeWheel.setChecked(mConfig.edgeWheel);
+        // mCheckEdgeWheel.setChecked(mConfig.edgeWheel); // EdgeWheel retired (dormant)
         mCheckPalette.setChecked(mConfig.commandPalette);
         mCheckSearch.setChecked(mConfig.globalSearch);
         mCheckFsFolders.setChecked(mConfig.fileSystemFolders);

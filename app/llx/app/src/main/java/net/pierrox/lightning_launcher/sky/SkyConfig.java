@@ -158,7 +158,8 @@ public class SkyConfig {
     public void applyMode(String newMode) {
         mode = newMode;
         boolean modern = MODE_MODERN_SKY.equals(newMode);
-        edgeWheel = modern;
+        // EdgeWheel retired: kept dormant in the codebase, never auto-enabled.
+        edgeWheel = false;
         commandPalette = modern;
         globalSearch = modern;
         fileSystemFolders = modern;
@@ -172,7 +173,7 @@ public class SkyConfig {
     /** Toggle one module by hand: the mode becomes custom. */
     public void setModule(String key, boolean enabled) {
         switch (key) {
-            case "edgeWheel": edgeWheel = enabled; break;
+            // case "edgeWheel": edgeWheel = enabled; break; // EdgeWheel retired (dormant)
             case "commandPalette": commandPalette = enabled; break;
             case "globalSearch": globalSearch = enabled; break;
             case "fileSystemFolders": fileSystemFolders = enabled; break;
@@ -233,6 +234,10 @@ public class SkyConfig {
 
         if (changed) {
             engine.notifyGlobalConfigChanged();
+            // notifyGlobalConfigChanged only updates memory + listeners; the
+            // gesture binding must be written to disk or it is lost on the next
+            // launch (and the upgrade migration's marker stops it re-applying).
+            engine.saveData();
         }
     }
 
@@ -243,10 +248,11 @@ public class SkyConfig {
      */
     private boolean bindEnabledModuleGestures(GlobalConfig gc) {
         boolean changed = false;
-        if (edgeWheel && isUntouched(gc.swipe2Up, GlobalConfig.NOTHING)) {
-            gc.swipe2Up = new EventAction(GlobalConfig.SKY_EDGE_WHEEL, null);
-            changed = true;
-        }
+        // EdgeWheel retired: no longer claims the two-finger swipe up. Dormant.
+        // if (edgeWheel && isUntouched(gc.swipe2Up, GlobalConfig.NOTHING)) {
+        //     gc.swipe2Up = new EventAction(GlobalConfig.SKY_EDGE_WHEEL, null);
+        //     changed = true;
+        // }
         if (commandPalette && isUntouched(gc.swipe2Down, GlobalConfig.NOTHING)) {
             gc.swipe2Down = new EventAction(GlobalConfig.SKY_COMMAND_PALETTE, null);
             changed = true;
@@ -275,7 +281,13 @@ public class SkyConfig {
         // v4: app drawer pull-past-edge events default to closing the drawer.
         // v5: ensure enabled module gestures are bound on upgraded installs
         //     (first-run-only binding meant upgraders never got them).
-        File marker = new File(context.getFilesDir(), "sky_modern_defaults_applied_v5");
+        // v6: the binding was applied in memory but never saved, so it was lost
+        //     on the next launch; re-run so the now-persisted bind sticks.
+        // v7: clear the stock USER_MENU swipe shadow on EVERY desktop, not just
+        //     home — a secondary desktop still swallowed the two-finger swipe.
+        // v8: EdgeWheel retired. Free any global two-finger swipe up still bound
+        //     to it (our old default) so the gesture is not left dead.
+        File marker = new File(context.getFilesDir(), "sky_modern_defaults_applied_v8");
         if (marker.exists() || engine == null) return;
         GlobalConfig gc = engine.getGlobalConfig();
         boolean changed = false;
@@ -289,39 +301,54 @@ public class SkyConfig {
             gc.swipeDown = new EventAction(GlobalConfig.SHOW_NOTIFICATIONS, null);
             changed = true;
         }
+        // v8: retire EdgeWheel — release the global two-finger swipe up if it
+        // still carries the old SKY_EDGE_WHEEL default (custom binds untouched).
+        if (gc.swipe2Up != null
+                && gc.swipe2Up.action == GlobalConfig.SKY_EDGE_WHEEL
+                && gc.swipe2Up.next == null) {
+            gc.swipe2Up = EventAction.NOTHING();
+            changed = true;
+        }
         if (bindEnabledModuleGestures(gc)) {
             changed = true;
         }
         if (changed) {
             engine.notifyGlobalConfigChanged();
+            // persist the global config; notifyGlobalConfigChanged is memory-only
+            engine.saveData();
         }
         try {
-            Page home = engine.getOrLoadPage(gc.homeScreen);
-            if (home != null && home.config != null) {
+            // Clear the stock template's page-level swipe bindings on EVERY
+            // dashboard desktop so the global gestures (app drawer / Sky
+            // modules) take effect; only the old USER_MENU defaults are
+            // touched, custom bindings stay. The old template stamped the same
+            // USER_MENU shadow on every desktop it created, so clearing home
+            // alone left secondary desktops swallowing the EdgeWheel swipe.
+            for (int pageId : engine.getPageManager().getAllPagesIds()) {
+                if (!Page.isDashboard(pageId)) continue;
+                Page d = engine.getOrLoadPage(pageId);
+                if (d == null || d.config == null) continue;
                 boolean pageChanged = false;
-                if (home.config.scrollingDirection == PageConfig.ScrollingDirection.AUTO) {
-                    home.config.scrollingDirection = PageConfig.ScrollingDirection.X;
+                if (d.config.scrollingDirection == PageConfig.ScrollingDirection.AUTO) {
+                    d.config.scrollingDirection = PageConfig.ScrollingDirection.X;
                     pageChanged = true;
                 }
-                // clear the stock template's page-level swipe bindings so the
-                // global ones (app drawer / Sky modules) can take effect; only
-                // the old USER_MENU defaults are touched, custom bindings stay
-                if (home.config.swipeUp != null
-                        && home.config.swipeUp.action == GlobalConfig.USER_MENU
-                        && home.config.swipeUp.next == null) {
-                    home.config.swipeUp = EventAction.UNSET();
+                if (d.config.swipeUp != null
+                        && d.config.swipeUp.action == GlobalConfig.USER_MENU
+                        && d.config.swipeUp.next == null) {
+                    d.config.swipeUp = EventAction.UNSET();
                     pageChanged = true;
                 }
-                if (home.config.swipe2Up != null
-                        && home.config.swipe2Up.action == GlobalConfig.USER_MENU
-                        && home.config.swipe2Up.next == null) {
-                    home.config.swipe2Up = EventAction.UNSET();
+                if (d.config.swipe2Up != null
+                        && d.config.swipe2Up.action == GlobalConfig.USER_MENU
+                        && d.config.swipe2Up.next == null) {
+                    d.config.swipe2Up = EventAction.UNSET();
                     pageChanged = true;
                 }
                 if (pageChanged) {
-                    home.setModified();
-                    home.saveConfig();
-                    home.notifyModified();
+                    d.setModified();
+                    d.saveConfig();
+                    d.notifyModified();
                 }
             }
             // v4: drawer pull-past-edge defaults (close the drawer), only when
